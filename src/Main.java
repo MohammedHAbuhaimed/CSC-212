@@ -1,5 +1,4 @@
-//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
-// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
+
 public class Main {
     public static void main(String[] args) {
         Node <Integer> n1 = new Node <Integer>(5);
@@ -11,5 +10,9 @@ public class Main {
         System.out.println("Hello");
         System.out.println(n1.data);
         System.out.println(n3.data);
+        LinkedList<Integer> l1 = new LinkedList<Integer>();
+        l1.insert(n1.data);
+        Integer x= l1.retrieve();
+        System.out.println(x);
     }
 }
