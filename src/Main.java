@@ -10,5 +10,6 @@ public class Main {
         head.next = n2;
         System.out.println("Hello");
         System.out.println(n1.data);
+        System.out.println(n3.data);
     }
 }
