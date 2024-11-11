@@ -1,3 +1,4 @@
+
 import java.io.File;
 import java.util.Scanner;
 public class Reading {
@@ -11,7 +12,7 @@ public class Reading {
             while(s.hasNextLine()){
                 line = s.nextLine();  //stores the data
                 if(line.trim().length()<3){
-                    System.out.println("End of line");
+                    System.out.println();
                     break;
                 }
                 System.out.println(line);  //prints the result from reading
@@ -22,7 +23,7 @@ public class Reading {
             }
         }
         catch (Exception e){
-            System.out.println("end of file");
+            System.out.println("End of file");
         }
     }
 }
