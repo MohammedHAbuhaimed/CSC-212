@@ -89,6 +89,30 @@ public class LinkedList <T> implements List<T>{
 
     public boolean isEmpty() {
         return head==null;
+
     }
+    public boolean search(T x){
+        Node<T> temp = head;
+        while(temp!=null){
+            if(temp.data.equals(x))
+                return true;
+            else
+                temp = temp.next;
+        }
+        return false;
+    }
+    public void display(){
+        if(head == null)
+            System.out.println("Empty list");
+
+        Node<T> p = head;
+        while(p!=null){
+            System.out.println(p.data+" ");
+            p = p.next;
+        }
+    }
+
+
+
 
 }
