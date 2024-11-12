@@ -25,7 +25,20 @@ public class Word { //This class is mainly used for inverted index
         }
 
         return false;
-
     }
+
+
+    public void display(){
+        System.out.println("\n------------------------------");
+        System.out.print("Word:"+ text);
+        System.out.print("[");
+        documentIDs.display();
+        System.out.println("]");
+    } //
+
+
+
+
+
 
 }

@@ -17,7 +17,7 @@ public class Index {
         documents.findFirst(); // moving the current to the head
         while(!documents.last()){ // display all the documents while we haven't reached the last document
             Document doc = documents.retrieve(); // store the current document into the variable doc
-           // System.out.println("\n-----------------------------------------"); // Splitting
+            // System.out.println("\n-----------------------------------------"); // Splitting
             System.out.println("ID: "+ doc.id); // displaying the id for each document
             doc.words.display(); // display all the words in the document
             System.out.println("\n-----------------------------------------"); // Splitting

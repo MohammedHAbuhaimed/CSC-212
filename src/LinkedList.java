@@ -20,7 +20,7 @@ public class LinkedList <T> implements List<T>{
         return false;
     }
     @Override
-    public void FindFirst() {
+    public void findFirst() {
         current=head;
 
     }
