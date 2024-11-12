@@ -34,7 +34,7 @@ public class Word { //This class is mainly used for inverted index
         System.out.print("[");
         documentIDs.display();
         System.out.println("]");
-    }
+    } //
 
 
 
