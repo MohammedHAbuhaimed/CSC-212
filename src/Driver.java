@@ -5,10 +5,12 @@ public class Driver {
     LinkedList<String> stopWords;
     Index index;
     InvertedIndex invertedIndex;
+    InvertedIndex invertedIndexBST;
     public Driver() {
         stopWords = new LinkedList();
         index = new Index();
         invertedIndex = new InvertedIndex();
+        invertedIndexBST = new InvertedIndex();
     }
     public void loadStopWords(String fileName) {
 
@@ -46,7 +48,7 @@ public class Driver {
                 int id = Integer.parseInt(x.trim());  //id = document# // trim --> cuts the spaces // parseInt --> converting String into int
                 String content = line.substring(line.indexOf(',')+1).trim(); // content = content of the document after the ","
                 LinkedList<String> docWords = createInvertedIndexList(content, id);
-                index.addDocument(new Document(id, docWords));
+                index.addDocument(new Document(id, docWords, content));
             }
         }
         catch (Exception e){
@@ -65,6 +67,7 @@ public class Driver {
             if(!existStopWords(tokens[i])){
                 docWords.insert(tokens[i]);
                 invertedIndex.add(tokens[i], id);
+                invertedIndexBST.add(tokens[i], id);
             }
         }
     }
@@ -91,6 +94,4 @@ public class Driver {
         stopWords.display();
     }
 
-    //...
-    //...
 }
