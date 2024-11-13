@@ -15,6 +15,20 @@ public class Main {
 //        Integer x= l1.retrieve();
 //        System.out.println(x);
 
-        Reading.Load("dataset.csv");
+//     Reading.Load("dataset.csv");
+        BST<Double> bst = new BST<Double>();
+        System.out.println("Tree empty ? " + bst.empty());
+        System.out.println("============================");
+        System.out.println("Inserting 11 nodes");
+        bst.insert("A", 35.0);
+        bst.insert("B", 14.0);
+        bst.insert("C", 5.0);
+        bst.insert("D", 33.0);
+        bst.insert("E", 53.5);
+        bst.insert("F", 50.3);
+        bst.insert("G", 44.8);
+        bst.insert("H", 40.7);
+        System.out.println("All nodes: ");
+        bst.inOrder();
     }
 }
