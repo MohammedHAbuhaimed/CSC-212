@@ -1,12 +1,12 @@
 import java.util.Scanner;
 import java.io.*;
 
-public class Driver {
+public class Text {
     LinkedList<String> stopWords;
     Index index;
     InvertedIndex invertedIndex;
     InvertedIndex invertedIndexBST;
-    public Driver() {
+    public Text() {
         stopWords = new LinkedList();
         index = new Index();
         invertedIndex = new InvertedIndex();
@@ -93,5 +93,26 @@ public class Driver {
     public void displayStopWords() {
         stopWords.display();
     }
+
+//    public void displayDocumentIDs(LinkedList<Integer> IDs) {
+//        if(IDs.empty()){
+//            System.out.println("No documents found");
+//            return;
+//        }
+//        IDs.findFirst();
+//        while (!IDs.last()){
+//            Document doc = index.displayDocumentsWithGivenIDs(IDs.retrieve());
+//            if(doc!=null){
+//                System.out.println("Document "+ doc.id+": "+doc.content);
+//            }
+//            IDs.findNext();
+//        }
+//        Document doc = index.displayDocumentsWithGivenIDs(IDs.retrieve());
+//        if(IDs.empty()){
+//            System.out.println("No documents found");
+//            return;
+//        }
+//        System.out.println("");
+//    }
 
 }
