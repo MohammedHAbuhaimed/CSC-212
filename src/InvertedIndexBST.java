@@ -26,7 +26,7 @@ public class InvertedIndexBST {
             System.out.println("Empty inverted index list");
             return;
         }
-
+//
         invertedindexBST.inOrder();
 
 

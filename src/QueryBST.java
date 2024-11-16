@@ -96,6 +96,7 @@ public class QueryBST {
             A=orQuery(A,B);
         }
         return A;
+        //
     }
     public static LinkedList<Integer> orQuery(LinkedList<Integer> A, LinkedList<Integer> B){
         LinkedList<Integer> result = new LinkedList<Integer>();

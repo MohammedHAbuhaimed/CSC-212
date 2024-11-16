@@ -14,7 +14,7 @@ public class Main {
 //        l1.insert(n1.data);
 //        Integer x= l1.retrieve();
 //        System.out.println(x);
-
+//
 //     Reading.Load("dataset.csv");
 //        BST<Double> bst = new BST<Double>();
 //        System.out.println("Tree empty ? " + bst.empty());
