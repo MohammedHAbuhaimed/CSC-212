@@ -94,25 +94,24 @@ public class Text {
         stopWords.display();
     }
 
-//    public void displayDocumentIDs(LinkedList<Integer> IDs) {
-//        if(IDs.empty()){
-//            System.out.println("No documents found");
-//            return;
-//        }
-//        IDs.findFirst();
-//        while (!IDs.last()){
-//            Document doc = index.displayDocumentsWithGivenIDs(IDs.retrieve());
-//            if(doc!=null){
-//                System.out.println("Document "+ doc.id+": "+doc.content);
-//            }
-//            IDs.findNext();
-//        }
-//        Document doc = index.displayDocumentsWithGivenIDs(IDs.retrieve());
-//        if(IDs.empty()){
-//            System.out.println("No documents found");
-//            return;
-//        }
-//        System.out.println("");
-//    }
+    public void displayDocumentIDs(LinkedList<Integer>IDs) {
+        if(IDs.isEmpty()){
+            System.out.println("No documents found");
+            return;
+        }
+        IDs.findFirst();
+        while (!IDs.last()){
+            Document doc = index.displayDocumentsWithGivenIDs(IDs.retrieve());
+            if(doc!=null){
+                System.out.println("Document "+ doc.id+": "+doc.content);
+            }
+            IDs.findNext();
+        }
+        Document doc = index.displayDocumentsWithGivenIDs(IDs.retrieve());
+        if(doc!=null){
+            System.out.println("Document "+ doc.id+": "+doc.content);
+        }
+        System.out.println("");
+    }
 
 }
