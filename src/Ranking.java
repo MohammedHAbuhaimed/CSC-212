@@ -3,11 +3,11 @@ import com.sun.jdi.connect.spi.TransportService;
 import javax.print.Doc;
 
 public class Ranking {
-    static String Query;
-    static InvertedIndexBST inverted;
-    static Index index;
-    static LinkedList<Integer> DocumentsInQuery;
-    static LinkedList<DocumentRank> DocumentRanked;
+    public static String Query;
+    public static InvertedIndexBST inverted;
+    public static Index index;
+    public static LinkedList<Integer> DocumentsInQuery;
+    public static LinkedList<DocumentRank> DocumentRanked;
 
 public Ranking(InvertedIndexBST bst,Index i,String Q){
     inverted = bst;
@@ -34,7 +34,7 @@ public static void display(){
 
 
 public static Document getDocumentGivenID(int id){
-    return  index.           // should be fixed
+    return  index         // should be fixed
 }
 
 
@@ -140,35 +140,47 @@ public static boolean existsInResult(LinkedList<Integer>result ,int id){
     else
         DocumentsInQuery.insert(id);
     }
+    public static void insertSortedInList(){
+    RankQuery(Query);
+    if(DocumentsInQuery.empty()){
+        System.out.println("Empty query");
+        return;
+    }
+    DocumentsInQuery.findFirst();
+    while (!DocumentsInQuery.last()) {
+        Document d = getDocumentGivenID(DocumentsInQuery.retrieve());
+        int rank = getDocumentScore(d, Query);
+        insertSortedInList (new DocumentRank(DocumentsInQuery.retrieve(), rank));
+        DocumentsInQuery.findNext();
+    }
+        Document d = getDocumentGivenID(DocumentsInQuery.retrieve());
+        int rank = getDocumentScore(d, Query);
+        insertSortedInList (new DocumentRank(DocumentsInQuery.retrieve(), rank));
+    }
+    public static void insertSortedInList(DocumentRank rank){
+    if(DocumentRanked.empty()){
+        DocumentRanked.insert(rank);
+        return;
+    }
+    DocumentRanked.findFirst();
+    while (!DocumentRanked.last()) {
+        if(rank.rank > DocumentRanked.retrieve().rank){
+            DocumentRank rank2 = DocumentRanked.retrieve();
+            DocumentRanked.update(rank);
+            DocumentRanked.insert(rank2);
+            return;
+        }
+        else
+            DocumentRanked.findNext();
+        }
+        if(rank.rank > DocumentRanked.retrieve().rank) {
+            DocumentRank rank2 = DocumentRanked.retrieve();
+            DocumentRanked.update(rank);
+            DocumentRanked.insert(rank2);
+            return;
+        }
+        else
+            DocumentRanked.insert(rank);
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
