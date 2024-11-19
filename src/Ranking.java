@@ -34,7 +34,7 @@ public static void display(){
 
 
 public static Document getDocumentGivenID(int id){
-    return  index         // should be fixed
+    return  index.displayDocumentsWithGivenIDs(id);
 }
 
 
@@ -68,7 +68,7 @@ public static int getDocumentScore(Document d, String Query){
 return sumFrequency;
 }
 
-public static void RankQuery(){
+public static void RankQuery(String query){
     LinkedList<Integer> L = new LinkedList<Integer>();
     if(Query.length()==0) return;
     String terms[]= Query.split(" ");
