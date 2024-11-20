@@ -1,4 +1,4 @@
-public class InvertedIndex {
+public class InvertedIndex extends InvertedIndexBST {
     LinkedList<Word> invertedIndex;
 
     public InvertedIndex(){

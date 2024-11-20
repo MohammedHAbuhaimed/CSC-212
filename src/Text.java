@@ -3,7 +3,7 @@ import java.io.*;
 
 public class Text {
     LinkedList<String> stopWords;
-    Index index;
+    static Index index;
     InvertedIndex invertedIndex;
     InvertedIndex invertedIndexBST;
     int numTokens;
