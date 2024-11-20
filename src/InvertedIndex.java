@@ -45,24 +45,13 @@ public class InvertedIndex {
         else{
             invertedIndex.findFirst();
             while(!invertedIndex.last()){
-                 invertedIndex.retrieve().display();
+                invertedIndex.retrieve().display();
 
                 invertedIndex.findNext();
             }
-                invertedIndex.retrieve().display();
+            invertedIndex.retrieve().display();
         }
     }
-
-    //
-
-
-
-
-
-
-
-
-
 
 
 }

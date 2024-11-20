@@ -69,4 +69,24 @@ public class Index {
         }
         return documents.retrieve();
     }
+    public LinkedList<Integer> getAllDocumentTerms(String term) {
+        LinkedList<Integer> terms = new LinkedList<>();
+        if (documents.empty()) {
+            System.out.println("No documents found");
+            return null;
+        }
+        documents.findFirst();
+        while (!documents.last()) {
+            if (documents.retrieve().words.equals(term.toLowerCase().trim())) {
+                terms.insert(documents.retrieve().id);
+
+            }
+            documents.findNext();
+        }
+        if (documents.retrieve().words.equals(term.toLowerCase().trim())) {
+            terms.insert(documents.retrieve().id);
+
+        }
+        return terms;
+    }
 }

@@ -6,6 +6,9 @@ public class Text {
     Index index;
     InvertedIndex invertedIndex;
     InvertedIndex invertedIndexBST;
+    int numTokens;
+    int numOfUniqueTokens;
+    LinkedList<String> uniqueWords=new LinkedList<>();
     public Text() {
         stopWords = new LinkedList();
         index = new Index();
@@ -61,9 +64,16 @@ public class Text {
         return docWords;
     }
     public void processContentForIndexing(String content, LinkedList<String> docWords, int id) {
+        content=content.replaceAll("\'"," ");
+        content=content.replaceAll("-"," ");
         content=content.toLowerCase().replaceAll("[^a-zA-Z0-9 ]", "");
         String[] tokens = content.split("\\s+");
+        numTokens+=tokens.length;
         for(int i=0 ; i<tokens.length ; i++) {
+            if(!uniqueWords.search(tokens[i])) {
+                uniqueWords.insert(tokens[i]);
+                numOfUniqueTokens++;
+            }
             if(!existStopWords(tokens[i])){
                 docWords.insert(tokens[i]);
                 invertedIndex.add(tokens[i], id);
