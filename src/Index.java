@@ -26,9 +26,47 @@ public class Index {
 
         // Displaying the last document
         Document doc = documents.retrieve();
-        System.out.println("\n-------------------------------------");
+        System.out.println();
         System.out.println("ID: "+ doc.id);
         doc.words.display();
 
+    }
+    public Document displayDocumentsWithGivenIDs(Integer ids) {
+        if (documents.empty()) { // Check if the list is empty
+            System.out.println("No documents found.");
+            return null;
+        }
+
+        documents.findFirst(); // Move the current pointer to the head of the list
+        boolean found = false;
+
+        // Iterate through the list and check if the document ID matches any in the list
+        while (!documents.last()) { // While not at the last document
+            Document doc = documents.retrieve(); // Retrieve the current document
+            if (documents.retrieve().equals(ids)) { // Check if the current document's ID is in the given list of IDs
+                System.out.println("\n-----------------------------------------");
+                System.out.println("ID: " + doc.id); // Display the document's ID
+                doc.words.display(); // Display the words in the document
+                System.out.println("\n-----------------------------------------");
+                found = true;
+            }
+            documents.findNext(); // Move to the next document
+        }
+
+        // Display the last document in the list
+        Document doc = documents.retrieve();
+        if (documents.retrieve().equals(ids)) {
+            System.out.println("\n-----------------------------------------");
+            System.out.println("ID: " + doc.id); // Display the last document's ID
+            doc.words.display(); // Display the words in the document
+            System.out.println("\n-----------------------------------------");
+            found = true;
+        }
+
+        // If no matching documents were found
+        if (!found) {
+            System.out.println("No documents found with the given IDs.");
+        }
+        return documents.retrieve();
     }
 }
