@@ -29,12 +29,12 @@ public static void display(){
     DocumentRanked.findNext();
     }
     DocumentRanked.retrieve().display();
-}
+}//
 
 
 
 public static Document getDocumentGivenID(int id){
-    return  index.displayDocumentsWithGivenIDs(id);
+    return  index.getDocumentID(id);
 }
 
 
@@ -71,7 +71,7 @@ return sumFrequency;
 public static void RankQuery(String query){
     LinkedList<Integer> L = new LinkedList<Integer>();
     if(Query.length()==0) return;
-    String terms[]= Query.split(" ");
+    String terms[]= Query.split("\\s+");
     boolean found = false;
     for (int i = 0; i < terms.length; i++) {
             found=inverted.searchWordInInvertedIndex(terms[i].trim().toLowerCase());

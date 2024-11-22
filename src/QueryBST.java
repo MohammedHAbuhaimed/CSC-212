@@ -97,7 +97,7 @@ public class QueryBST {
         }
         return A;
         //
-    }
+    }//
     public static LinkedList<Integer> orQuery(LinkedList<Integer> A, LinkedList<Integer> B){
         LinkedList<Integer> result = new LinkedList<Integer>();
         if(A.empty() && B.empty()){

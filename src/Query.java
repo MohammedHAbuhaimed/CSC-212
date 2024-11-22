@@ -46,7 +46,7 @@ public class Query {
             if(found){
                 B=invertedIndex.invertedIndex.retrieve().documentIDs;
             }
-            A=andQuery(A,B);
+            A=andQuery(A,B);//
         }
         return A;
 

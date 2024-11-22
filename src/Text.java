@@ -1,8 +1,10 @@
+
 import java.util.Scanner;
 import java.io.*;
+import java.io.File;
 
 public class Text {
-    LinkedList<String> stopWords;
+    static LinkedList<String> stopWords;
     static Index index;
     InvertedIndex invertedIndex;
     InvertedIndex invertedIndexBST;
@@ -42,14 +44,16 @@ public class Text {
             while(s.hasNextLine()) { // while it is not the last line " has next line"
                 line = s.nextLine();  // stores the data in the variable line
                 if(line.trim().length()<3) { // Skipping the empty 3 lines after document 49 in Excel file.
-                    System.out.println("End of line");
+                    System.out.println("Empty line found, skipping this line "+ line);
                     break;
                 }
-
+                System.out.println(line);
 
                 String x = line.substring(0,line.indexOf(',')); // we take the id's of the docs
-                int id = Integer.parseInt(x.trim());  //id = document# // trim --> cuts the spaces // parseInt --> converting String into int
-                String content = line.substring(line.indexOf(',')+1).trim(); // content = content of the document after the ","
+                int id = Integer.parseInt(x.trim());
+               // System.out.println("line= "+line);//id = document# // trim --> cuts the spaces // parseInt --> converting String into int
+               String content = line.substring(line.indexOf(',')+1).trim(); // content = content of the document after the ","
+               // System.out.println("content= "+content);
                 LinkedList<String> docWords = createInvertedIndexList(content, id);
                 index.addDocument(new Document(id, docWords, content));
             }
@@ -64,9 +68,17 @@ public class Text {
         return docWords;
     }
     public void processContentForIndexing(String content, LinkedList<String> docWords, int id) {
-        content=content.replaceAll("\'"," ");
-        content=content.replaceAll("-"," ");
-        content=content.toLowerCase().replaceAll("[^a-zA-Z0-9 ]", "");
+       //e-sports
+        while(content.contains("-")){
+            if(content.charAt(content.indexOf("-")-2)==' '){
+                content=content.replaceFirst("-", "");}
+            else
+            content=content.replaceFirst("-", " ");
+
+        }
+//        content=content.replaceAll("\'"," ");
+//        content=content.replaceAll("-"," ");
+       content=content.toLowerCase().replaceAll("[^a-zA-Z0-9 ]", "");
         String[] tokens = content.split("\\s+");
         numTokens+=tokens.length;
         for(int i=0 ; i<tokens.length ; i++) {
@@ -99,6 +111,7 @@ public class Text {
     public void loadAllFiles(String stopFile, String documentsFile){
         loadStopWords(stopFile);
         loadDocuments(documentsFile);
+
     }
     public void displayStopWords() {
         stopWords.display();
@@ -111,7 +124,7 @@ public class Text {
         }
         IDs.findFirst();
         while (!IDs.last()){
-            Document doc = index.displayDocumentsWithGivenIDs(IDs.retrieve());
+            Document doc = index.getDocumentID(IDs.retrieve());
             if(doc!=null){
                 System.out.println("Document "+ doc.id+": "+doc.content);
             }
@@ -123,5 +136,34 @@ public class Text {
         }
         System.out.println("");
     }
+   /* public static void main(String[] args){
+        Text t = new Text();
+        t.loadAllFiles("stop.txt", "dataset.csv");
+        t.index.displayDocuments();
+        System.out.println("\n==========================================");
+        t.invertedIndex.display();
+        System.out.println("num of tokens: "+ t.numTokens);
+        System.out.println("num of unique: "+ t.uniqueWords.n);
+        Query q = new Query(t.invertedIndex);
+        LinkedList res = Query.andQuery("colorANDpole");
+        t.displayDocumentIDs(res);
+        System.out.println("--------------------OR--------------------------");
+        LinkedList res2 = Query.andQuery("Arabia OR pole ORcolor");
+        t.displayDocumentIDs(res2);
+        System.out.println("=================Ranking market sports using List========================");
+        Ranking R1 = new Ranking(new InvertedIndexBST(), index, "market sports");
+        R1.insertSortedInList();
+        R1.display();
+        System.out.println("\n==========================");
+        Query q2 = new Query(t.invertedIndex);
+        System.out.println("=======================market AND sports=======================");
+        //LinkedList res3 = Query.booleanQuery("market AND sports");
+      //  t.displayDocumentIDs(res3);
+        stopWords.display();
+
+
+
+    }*/
+
 
 }

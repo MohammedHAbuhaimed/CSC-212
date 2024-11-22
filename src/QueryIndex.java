@@ -106,7 +106,7 @@ public class QueryIndex {
             else
                 break;
 
-        }
+        }//
         B.findFirst();
         while(!B.empty()){
             boolean found = existInResult (result, B.retrieve());

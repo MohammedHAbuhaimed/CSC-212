@@ -14,9 +14,9 @@ public class InvertedIndexBST {
             wordExists.addID(id);
         }
     }
-
-    public boolean searchWordInInvertedIndex(String w){
-        return invertedindexBST.findkey(w);
+//
+    public boolean searchWordInInvertedIndex(String word){
+        return invertedindexBST.findkey(word);
     }
     public void display() {
         if (invertedindexBST == null) {
@@ -26,7 +26,7 @@ public class InvertedIndexBST {
             System.out.println("Empty inverted index list");
             return;
         }
-//
+
         invertedindexBST.inOrder();
 
 

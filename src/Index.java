@@ -17,13 +17,13 @@ public class Index {
         documents.findFirst(); // moving the current to the head
         while(!documents.last()){ // display all the documents while we haven't reached the last document
             Document doc = documents.retrieve(); // store the current document into the variable doc
-            // System.out.println("\n-----------------------------------------"); // Splitting
+            System.out.println("\n-----------------------------------------"); // Splitting
             System.out.println("ID: "+ doc.id); // displaying the id for each document
             doc.words.display(); // display all the words in the document
-            System.out.println("\n-----------------------------------------"); // Splitting
+            //System.out.println("\n-----------------------------------------"); // Splitting
             documents.findNext(); // move the current to the next document
         }
-
+//
         // Displaying the last document
         Document doc = documents.retrieve();
         System.out.println();
@@ -88,5 +88,23 @@ public class Index {
 
         }
         return terms;
+    }
+    public Document getDocumentID(int id){
+        if(documents.empty()) {
+            System.out.println("No documents found");
+            return null;
+        }
+        documents.findFirst();
+        while (!documents.last()) {
+            if (documents.retrieve().id == id) {
+                return documents.retrieve();
+            }
+            documents.findNext();
+        }
+        if (documents.retrieve().id == id) {
+            return documents.retrieve();
+        }
+        return null;
+
     }
 }

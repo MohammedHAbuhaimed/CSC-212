@@ -22,7 +22,7 @@ public class InvertedIndex extends InvertedIndexBST {
 
         invertedIndex.findFirst();
         while(!invertedIndex.last()) {
-            if (invertedIndex.retrieve().equals(word)) {
+            if (invertedIndex.retrieve().text.equals(word)) {
                 return true;
             }
             invertedIndex.findNext();
@@ -54,4 +54,4 @@ public class InvertedIndex extends InvertedIndexBST {
     }
 
 
-}
+}//

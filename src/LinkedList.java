@@ -3,6 +3,7 @@ public class LinkedList <T> implements List<T>{
 
     private Node<T> head;
     private Node<T> current;
+    int n=0;
     public LinkedList() { // list is empty > head=null
         head=current=null;
     }
@@ -10,7 +11,7 @@ public class LinkedList <T> implements List<T>{
         head=current=n;
     }
 
-
+//
     @Override
     public boolean empty() {
         return head==null;
@@ -47,6 +48,7 @@ public class LinkedList <T> implements List<T>{
     }
     @Override
     public void insert(T e) {
+        n++;
         Node<T> n = new Node<T>(e);
         if(empty())
             head=current=n;
@@ -91,6 +93,8 @@ public class LinkedList <T> implements List<T>{
         return head==null;
 
     }
+
+    // Helping methods:
     public boolean search(T x){
         Node<T> temp = head;
         while(temp!=null){

@@ -5,7 +5,7 @@ public class Main {
         System.out.println("1-Retrieve a term ( there are choices"
                 +":using index with lists"
                 +"-inverted index with lists"
-                + "-inverted index with Bst.");
+                + "-inverted index with BST.");
         System.out.println("2-Boolean Retrieval.");
         System.out.println("3-Ranked Retrieval.");
         System.out.println("4-Index Documents:print all documents.");
@@ -16,9 +16,11 @@ public class Main {
         System.out.println("9-Index Tokens:to show number of vocabulary and tokens in the index.");
         System.out.println("10-Exit.");
 
-    }
+    }//
     public static void main(String[] args) {
             Text d=new Text();
+            Reading r = new Reading();
+            //r.Load("dataset.csv");
             d.loadAllFiles( "stop.txt","dataset.csv");
             Scanner s=new Scanner(System.in);
             int ch=0;
@@ -109,11 +111,11 @@ public class Main {
                         System.out.println("---------------");
                         break;
                     case 5:
-                        //System.out.println("num of documents="+Text.index.displayDocuments.n);
+                        System.out.println("num of documents="+Text.index.documents.n);
                         System.out.println("---------------");
                         break;
                     case 6:
-                       // System.out.println("num of unique words without stop words="+d.invertedIndex.invertedIndex.n);
+                        System.out.println("num of unique words without stop words="+d.invertedIndex.invertedIndex.n);
                         System.out.println("---------------");
                         break;
                     case 7:
@@ -135,7 +137,10 @@ public class Main {
                 }
             }while(ch!=10);
 
-        }
+        }//end of main
+//    public void displayStopWords(){
+//        stopWords.display();
+//    }
 
 
-    }
+    }//end of class
