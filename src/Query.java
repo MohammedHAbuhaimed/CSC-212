@@ -1,8 +1,8 @@
 public class Query {
-    static InvertedIndex inverted ;
+    static InvertedIndex invertedIndex;
     
-    public Query(InvertedIndex inverted){
-    this.inverted = inverted;
+    public Query(InvertedIndex invertedIndex){
+    this.invertedIndex = invertedIndex;
     }
     public static LinkedList<Integer> AndQuery(String Q){//     Q=Query
     LinkedList<Integer> listA = new LinkedList<Integer> ();//first list A
@@ -11,13 +11,13 @@ public class Query {
     
     if(terms.length == 0 ) 
         return listA;
-    boolean found = inverted.searchWord(terms[0].trim().toLowerCase()); // search
+    boolean found = invertedIndex.searchWord(terms[0].trim().toLowerCase()); // search
     if (found)
-        listA = inverted.inverted_index.retrieve().doc_IDS;
+        listA = invertedIndex.invertedIndex.retrieve().docIDS;
     for (int i=1 ; i<terms.length ; i++){
-        found = inverted.searchWord(terms[i].trim().toLowerCase()); // search
+        found = invertedIndex.searchWord(terms[i].trim().toLowerCase()); // search
     if (found)
-        listB = inverted.inverted_index.retrieve().doc_IDS;
+        listB = invertedIndex.invertedIndex.retrieve().docIDS;
     
     listA = AndQuery(listA,listB);
     }
@@ -61,13 +61,13 @@ public class Query {
 
         if(terms.length == 0 ) 
             return listA;
-        boolean found = inverted.searchWord(terms[0].trim().toLowerCase()); // search
+        boolean found = invertedIndex.searchWord(terms[0].trim().toLowerCase()); // search
         if (found)
-            listA = inverted.inverted_index.retrieve().doc_IDS;
+            listA = invertedIndex.invertedIndex.retrieve().docIDS;
         for (int i=1  ; i<terms.length ; i++){
-            found = inverted.searchWord(terms[i].trim().toLowerCase()); // search
+            found = invertedIndex.searchWord(terms[i].trim().toLowerCase()); // search
         if (found)
-            S = inverted.inverted_index.retrieve().doc_IDS;
+            S = invertedIndex.invertedIndex.retrieve().docIDS;
 
         listA = ORQuery(listA , S);
         }

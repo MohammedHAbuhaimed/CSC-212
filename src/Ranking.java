@@ -13,39 +13,39 @@ class DocumentRanking {
 //Using sorted list with ordering ids
 public class Ranking {
     static String Query; 
-    static InvertedIndexBST inverted;
-    static index index1;
+    static InvertedIndexBST invertedIndexBST;
+    static index index;
     static LinkedList<Integer> queryDocs;
     static LinkedList<DocumentRanking> rankedDocs;
     
-    public Ranking (InvertedIndexBST inverted, index index1, String Query ) {
-        this.inverted = inverted; 
-        this.index1=index1;
+    public Ranking (InvertedIndexBST invertedIndexBST, index index, String Query ) {
+        this.invertedIndexBST = invertedIndexBST;
+        this.index = index;
         this.Query= Query;
         queryDocs=new LinkedList<Integer>();
         rankedDocs=new LinkedList<DocumentRanking>();
     }
     
     public void displayAllDocList() {
-        System.out.println("Displaying documents with scores...");
+
 
         if (rankedDocs.empty()) {
             System.out.println("Empty list, no ranked documents found.");
             return;
         }
         
-        System.out.printf("%-8s%-8s\n","DocID","Score");
+        System.out.printf("%-8s%-8s\n","DocID ","Score");
         rankedDocs.findFirst();
         while(!rankedDocs.last()){
             rankedDocs.retrieve().display();
             rankedDocs.findNext();
         }
         rankedDocs.retrieve().display();
-        System.out.println("Displaying last document with scores...");
+
     }
     
     public static Document getDocGivenID(int id) {
-        return index1.getAllDocGivenID(id);
+        return index.getAllDocGivenID(id);
     }
     
     //عدد مرات تكرار الكلمة بالملف
@@ -84,9 +84,9 @@ public class Ranking {
         boolean found=false;
 
         for (int i=0; i< terms.length; i++) {
-            found = inverted.searchWord(terms[i].trim().toLowerCase());
+            found = invertedIndexBST.searchWord(terms[i].trim().toLowerCase());
             if (found)
-                docIDs = inverted.inverted_index.retrieve().doc_IDS;
+                docIDs = invertedIndexBST.invertedIndexBST.retrieve().docIDS;
             AddingInListSorted(docIDs);
 
         }

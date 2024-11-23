@@ -1,54 +1,54 @@
 //inverted by linkedList
 public class InvertedIndex {
-    LinkedList<Word> inverted_index; 
+    LinkedList<Word> invertedIndex;
     
     public InvertedIndex(){
-        inverted_index=new LinkedList<Word>();
+        invertedIndex =new LinkedList<Word>();
     }
     
     public void addWord(String text, int id) {
         //If the word isn't found 
         if (!searchWord(text) ){
             Word word = new Word(text);
-            word.doc_IDS.insert(id);
-            inverted_index.insert(word);
+            word.docIDS.insert(id);
+            invertedIndex.insert(word);
         }
         else {
-            Word existingWord = inverted_index.retrieve();
+            Word existingWord = invertedIndex.retrieve();
             existingWord.addID(id);
         }
     }    
 
     public boolean searchWord(String word) {
-        if (inverted_index==null || inverted_index.empty())
+        if (invertedIndex ==null || invertedIndex.empty())
             return false;
-        inverted_index.findFirst();
-        while (!inverted_index.last()) {
-            if (inverted_index.retrieve().text.equals(word))
+        invertedIndex.findFirst();
+        while (!invertedIndex.last()) {
+            if (invertedIndex.retrieve().text.equals(word))
                 return true;
-            inverted_index.findNext();
+            invertedIndex.findNext();
         }
-        if(inverted_index.retrieve().equals(word)) //For the last word
+        if(invertedIndex.retrieve().equals(word)) //For the last word
             return true;
         return false;
     }
     
     public void displayInvertedIndex(){
-        if (inverted_index==null) {
+        if (invertedIndex ==null) {
             System.out.println("Null inverted index");
             return;
         }
-        else if (inverted_index.empty()){
+        else if (invertedIndex.empty()){
             System.out.println("Empty inverted index");
             return;
         }
-        inverted_index.findFirst();
-        while (!inverted_index.last()){
-            inverted_index.retrieve().display();
-            inverted_index.findNext();
+        invertedIndex.findFirst();
+        while (!invertedIndex.last()){
+            invertedIndex.retrieve().display();
+            invertedIndex.findNext();
         }
         //For the last word
-        inverted_index.retrieve().display();
+        invertedIndex.retrieve().display();
      
     }
     

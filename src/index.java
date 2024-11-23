@@ -22,16 +22,17 @@ public class index {
       allDocuemnts.findFirst();
       while (!allDocuemnts.last()){
           Document doc= allDocuemnts.retrieve();
-          System.out.println("\n ------------------------");
-          System.out.println("ID:"+ doc.id);
+          System.out.println("\n----------------------------------------------------");
+          System.out.println("ID: "+ doc.id);
           doc.words.display();
           allDocuemnts.findNext();
       }
       
       Document doc= allDocuemnts.retrieve();
-       System.out.println("\n ------------------------");
-       System.out.println("ID:"+ doc.id);
-       doc.words.display();       
+       System.out.println("\n----------------------------------------------------");
+       System.out.println("ID: "+ doc.id);
+       doc.words.display();
+        System.out.println("\n----------------------------------------------------");
     }
     
     public void findAndDisplayDoc(int id) {
@@ -49,7 +50,7 @@ public class index {
 //    Method to retrun document given the id, used in class Ranked
     public Document getAllDocGivenID(int id) {
         if(allDocuemnts.empty()){
-            System.out.println("No document exisit");
+            System.out.println("No document exist");
             return null;
         }
         

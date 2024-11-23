@@ -1,31 +1,31 @@
 public class Word {
     String text;
-    LinkedList<Integer>doc_IDS;
+    LinkedList<Integer> docIDS;
     
     public Word(String W){
         text=W;
-        doc_IDS=new LinkedList<Integer>();
+        docIDS =new LinkedList<Integer>();
         
     }
     
     public void addID(int id){
         if(!searchIdExists(id))
-            doc_IDS.insert(id);
+            docIDS.insert(id);
         
     }
     public boolean searchIdExists(Integer id){
-        if(doc_IDS.empty()) 
+        if(docIDS.empty())
             return false;
         
-        doc_IDS.findFirst();
-        while (!doc_IDS.last()){
-            if(doc_IDS.retrieve().equals(id)){
+        docIDS.findFirst();
+        while (!docIDS.last()){
+            if(docIDS.retrieve().equals(id)){
                 return true;
             }
-            doc_IDS.findNext();   
+            docIDS.findNext();
         }
         
-        if (doc_IDS.retrieve().equals(id)){
+        if (docIDS.retrieve().equals(id)){
                 return true;
         }
       return false;
@@ -38,17 +38,17 @@ public class Word {
     }
 
     public void display() {
-        System.out.println("\n--------------------------");
+        System.out.println("\n----------------------------------------------");
         System.out.println("Word: " + text);
         System.out.print("Document IDs: [");
 
         // Display doc_IDS contents
-        doc_IDS.findFirst();
-        while (!doc_IDS.last()) {
-            System.out.print(doc_IDS.retrieve() + ", ");
-            doc_IDS.findNext();
+        docIDS.findFirst();
+        while (!docIDS.last()) {
+            System.out.print(docIDS.retrieve() + ", ");
+            docIDS.findNext();
         }
-        System.out.print(doc_IDS.retrieve()); // Last ID without a trailing comma
+        System.out.print(docIDS.retrieve()); // Last ID without a trailing comma
         System.out.println("]");
     }
     

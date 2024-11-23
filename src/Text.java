@@ -4,17 +4,17 @@ import java.util.Scanner;
 
 public class Text {
 LinkedList<String> stopWords;
-static index index1;
-InvertedIndex inverted;
-InvertedIndexBST invertedBST;
+static index index;
+InvertedIndex invertedIndex;
+InvertedIndexBST invertedIndexBST;
 int numberOfToken=0;
 LinkedList<String> uniqueWords=new LinkedList<>();
 
     public Text(){
         stopWords=new LinkedList<>();
-        index1=new index();
-        inverted=new InvertedIndex();
-        invertedBST= new InvertedIndexBST();
+        index =new index();
+        invertedIndex =new InvertedIndex();
+        invertedIndexBST = new InvertedIndexBST();
     }
 
     public void LoadStopWords(String fileName){
@@ -30,6 +30,7 @@ LinkedList<String> uniqueWords=new LinkedList<>();
         }
     }
 
+
     public void LoadAllDoc(String fileName){
         String line=null;
         try{
@@ -41,29 +42,29 @@ LinkedList<String> uniqueWords=new LinkedList<>();
                 line=Read.nextLine();
 
                 if (line.trim().length()<3){
-                    System.out.println();
+                    //   System.out.println();
                     break;
                 }
 
                 String F =line.substring(0, line.indexOf(',')).trim();
                 int id = Integer.parseInt(F);
-              System.out.println("Docuemnt ID: "+ line);
+
                 String content = line.substring(line.indexOf(',')+1).trim();
 
 
 
-                LinkedList<String>WordsINDoc =makeLinkedListOfWords(content, id) ;
-                index1.addDocuemnt(new Document (id,WordsINDoc, content));
+                LinkedList<String>wordsInDoc = createListOfWords(content, id) ;
+                index.addDocuemnt(new Document (id,wordsInDoc, content));
             }
         }catch(Exception e) {
             System.out.println("End of file");
         }
     }
 
-    public LinkedList<String> makeLinkedListOfWords(String content, int id){
-            LinkedList<String>words_in_doc =new LinkedList<String>();
-            makeIndexAndInvertedIndex(content, words_in_doc, id);
-            return words_in_doc;
+    public LinkedList<String> createListOfWords(String content, int id){
+            LinkedList<String>wordsInDoc =new LinkedList<String>();
+            processIndexAndInvertedIndex(content, wordsInDoc, id);
+            return wordsInDoc;
     }
 
     public LinkedList<String > InvertedIndexDoc (String WORDS, int id){
@@ -78,8 +79,8 @@ LinkedList<String> uniqueWords=new LinkedList<>();
         for (String w: tokens) {
             if (!IsStopWord(w)){
                 WordsINDoc.insert(w);
-                inverted.addWord(w , id);
-                invertedBST.addWord(w, id);
+                invertedIndex.addWord(w , id);
+                invertedIndexBST.addWord(w, id);
             }
         }
     }
@@ -118,15 +119,15 @@ LinkedList<String> uniqueWords=new LinkedList<>();
         IDs.findFirst();
         System.out.print("Result: {");
         while (!IDs.last()){
-            index1.getAllDocGivenID(IDs.retrieve());
+            index.getAllDocGivenID(IDs.retrieve());
             System.out.print(",");
             IDs.findNext();
         }
-        index1.getAllDocGivenID(IDs.retrieve());
+        index.getAllDocGivenID(IDs.retrieve());
         System.out.println("}");
     }
 
-    public void makeIndexAndInvertedIndex(String content, LinkedList<String>words_in_doc, int id){
+    public void processIndexAndInvertedIndex(String content, LinkedList<String>wordsInDoc, int id){
         while (content.contains("-")) {
             if (content.charAt(content.indexOf("-")-2)==' ')
                 content=content.replaceFirst("-", "");
@@ -145,9 +146,9 @@ LinkedList<String> uniqueWords=new LinkedList<>();
                 uniqueWords.insert(w);
 
             if (!existsInStopWords(w)){
-                words_in_doc.insert(w);
-                inverted.addWord(w, id);
-                invertedBST.addWord(w, id);
+                wordsInDoc.insert(w);
+                invertedIndex.addWord(w, id);
+                invertedIndexBST.addWord(w, id);
             }
         }
     }
@@ -170,14 +171,14 @@ LinkedList<String> uniqueWords=new LinkedList<>();
     }
 
     public static void displayMenu(){
-        System.out.println("============================ Welcome to the Simple Search Engine System! ============================ ");
+        System.out.println("============================ Welcome to the Simple Search Engine System! ======================================================== ");
         System.out.println("1-Retrieve a term (choose a method)\n"
                 +"-Using index (lists) "
                 +"-Using inverted index (lists) "
                 +"-Using inverted index with (BST) ");
         System.out.println("2- Boolean Retrieval");
         System.out.println("3- Ranked Retrieval");
-        System.out.println("4- Index Documents: Print all documents.");
+        System.out.println("4- Index Documents: Print all documents without stop words.");
         System.out.println("5- Number of documents in the index.");
         System.out.println("6- Number of unique words in the indexed.");
         System.out.println("7- Show inverted index with list. ");
@@ -186,7 +187,7 @@ LinkedList<String> uniqueWords=new LinkedList<>();
         System.out.println("0- Exit.");
 
     }
-    public static void main(String args[]){
+    public static void Test(){
         Text text = new Text();
         text.LoadFiles( "stop.txt","dataset.csv");
         Scanner read =new Scanner(System.in);
@@ -199,72 +200,69 @@ LinkedList<String> uniqueWords=new LinkedList<>();
                     System.out.println("Enter a term to retrieve");
                     String term=read.next();
                     term=term.toLowerCase().trim();
-                    System.out.println("word:"+term);
-                    LinkedList<Integer>res= Text.index1.getAllDocGivenTerm(term);
+                    System.out.println("word: "+term);
+                    LinkedList<Integer>res= Text.index.getAllDocGivenTerm(term);
                     System.out.print("Document IDs: "+"[");
                     res.display();
                     System.out.println("]");
-                    System.out.println("-inverted index with lists");
-                    boolean found= text.inverted.searchWord(term);
+                    System.out.println("----------------------------------------");
+                    System.out.println("Inverted index with lists");
+                    boolean found= text.invertedIndex.searchWord(term);
                     if(found)
-                        text.inverted.inverted_index.retrieve().display();
+                        text.invertedIndex.invertedIndex.retrieve().display();
                     else
-                        System.out.println("Not found in inverted index with lists.");
+                        System.out.println("Not found in inverted index ( List ).");
 
-                    System.out.println("-inverted index with BST.");
-                    boolean found2= text.invertedBST.searchWord(term);
+                    System.out.println("Inverted index with BST.");
+                    boolean found2= text.invertedIndexBST.searchWord(term);
                     if(found2)
-                        text.inverted.inverted_index.retrieve().display();
+                        text.invertedIndex.invertedIndex.retrieve().display();
                     else
-                        System.out.println("Not found in inverted index with lists.");
+                        System.out.println("Not found in inverted index.");
                     break;
                 case 2:
                     read.nextLine();
-                    System.out.println("Enter a query to retrieve");
+                    System.out.println("Enter a query to retrieve: ");
                     String query=read.nextLine();
                     query=query.toLowerCase();
                     query=query.replaceAll(" and "," AND ");
                     query=query.replaceAll(" or "," OR ");
-                    System.out.println("""
-                                       Please choose the query method:
-                                            1-Using index. 
-                                            2-Using inverted index list of lists. 
-                                            3-Using BST.
-                                            4-exit.
-                                       """);
+                    System.out.println("\nWhich method you want to make a query: \n"
+                            + "1- index \n"
+                            + "2-inverted index  \n"
+                            + "3- BST\n"
+                            + "4- Exit \n");
                     int opinion=read.nextInt();
                     do{
-                    if(opinion==1){ // Query from index
-                      QueryIndex q=new QueryIndex(Text.index1);
-                       System.out.println("========"+query+"=======");
-                    LinkedList res1= QueryIndex.MixedQuery(query);
-                    text.displayDocById(res1);
-                    }
-                    else if(opinion==2){ // Normal Query
-                    Query q=new Query(text.inverted);
-                     System.out.println("========"+query+"=======");
-                    LinkedList res1= Query.MixedQuery(query);
-                    text.displayDocById(res1);
-                    }
-                    else if(opinion==3){ // QueryProcessingBST
-                      QueryBST q=new QueryBST(text.invertedBST);
-                      System.out.println("========"+query+"=======");
-                      LinkedList res1= QueryBST.MixedQuery(query);
-                      text.displayDocById(res1);
-                    }
-                    else if(opinion==4)
-                        break;
-                    else
-                        System.out.println("invalid query.");
+                        if(opinion==1){ // Query from index
+                            QueryIndex q=new QueryIndex(Text.index);
+                            System.out.println("===================="+query+"====================");
+                            LinkedList res1= QueryIndex.MixedQuery(query);
+                            text.displayDocById(res1);
+                        }
+                        else if(opinion==2){ // Normal Query
+                            Query q=new Query(text.invertedIndex);
+                            System.out.println("===================="+query+"====================");
+                            LinkedList res1= Query.MixedQuery(query);
+                            text.displayDocById(res1);
+                        }
+                        else if(opinion==3){ // QueryProcessingBST
+                            QueryBST q=new QueryBST(text.invertedIndexBST);
+                            System.out.println("===================="+query+"====================");
+                            LinkedList res1= QueryBST.MixedQuery(query);
+                            text.displayDocById(res1);
+                        }
+                        else if(opinion==4)
+                            break;
+                        else
+                            System.out.println("invalid query.");
 
-                    System.out.println("""  
-                                       Please choose the query method:
-                                            1-Using index. 
-                                            2-Using inverted index list of lists. 
-                                            3-Using BST.
-                                            4-exit.
-                                       """);
-                    opinion=read.nextInt();
+                        System.out.println("\nwhich method you want to make a query? \n"
+                                + "1- index \n"
+                                + "2- inverted index \n"
+                                + "3- BST\n"+
+                                "4- Exit");
+                        opinion=read.nextInt();
                     }while(opinion!=4);
 
                     break;
@@ -273,40 +271,49 @@ LinkedList<String> uniqueWords=new LinkedList<>();
                     System.out.println("Enter a query to Rank");
                     String query2=read.nextLine();
                     query2=query2.toLowerCase();
-                    Ranking ranking=new Ranking(text.invertedBST, index1,query2);
+                    Ranking ranking=new Ranking(text.invertedIndexBST, index,query2);
                     ranking.insertSortedList();
                     ranking.displayAllDocList();
                     break;
                 case 4:
-                    text.index1.displayDocuments();
-                    System.out.println("=================================");
+                    text.index.displayDocuments();
+                    System.out.println("----------------------------------------------------");
                     break;
                 case 5:
-                    System.out.println("Number of documents="+ Text.index1.allDocuemnts.count);
-                    System.out.println("=================================");
+                    System.out.println("Number of documents: "+ Text.index.allDocuemnts.count);
+                    System.out.println("----------------------------------------------------");
                     break;
                 case 6:
-                    System.out.println("Number of unique words without stop words="+ text.inverted.inverted_index.count);
-                    System.out.println("=================================");
+                    System.out.println("Number of unique words without stop words: "+ text.invertedIndex.invertedIndex.count);
+                    System.out.println("----------------------------------------------------");
                     break;
                 case 7:
-                    text.inverted.displayInvertedIndex();
+                    text.invertedIndex.displayInvertedIndex();
                     break;
                 case 8:
-                    text.invertedBST.displayInvertedIndexBST();
+                    text.invertedIndexBST.displayInvertedIndexBST();
                     break;
                 case 9:
-                 System.out.println("Number of tokens="+ text.numberOfToken);
-                 System.out.println("Number of unique words including stop words="+ text.uniqueWords.count);
+                    System.out.println("Number of tokens: "+ text.numberOfToken);
+                    System.out.println("Number of unique words including stop words: "+ text.uniqueWords.count);
                     break;
-                case 10:
-                    System.out.println("==========Thank you for using our search engine!==========");
+                case 0:
+                    System.out.println("==============================Thank you for using our search engine!==============================");
                     break;
                 default:
                     System.out.println("Error input number, please try again.");
                     break;
-                }
-            }while(choice!=10);
+            }
+        }while(choice!=0);
+    }
+
+    public static void main(String [] args) {
+        try {
+            Test();
+        }catch(Exception e) {
+            System.out.println("Please enter correct input");
+            Test();
+        }
     }
 
 }

@@ -1,4 +1,4 @@
-class BSTNode<T> {
+class BSTNode <T> {
     public T data;
     public String key;
     public BSTNode <T> left,right;

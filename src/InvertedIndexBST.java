@@ -1,52 +1,52 @@
 //inverted by binary search tree
 public class InvertedIndexBST { 
-    BST<Word> inverted_index;
+    BST<Word> invertedIndexBST;
     
     public InvertedIndexBST(){
-        inverted_index=new BST<Word>();
+        invertedIndexBST =new BST<Word>();
     }
     
     public void addWord(String text, int id) {
         //If the word isn't found 
         if (!searchWord(text) ){
             Word word = new Word(text);
-            word.doc_IDS.insert(id);
-            inverted_index.insert(text,word);
+            word.docIDS.insert(id);
+            invertedIndexBST.insert(text,word);
         }
         else {
-            Word existingWord = inverted_index.retrieve();
+            Word existingWord = invertedIndexBST.retrieve();
             existingWord.addID(id);
         }
     }
     
     public void addFromInvertedList(InvertedIndex inverted){
-        if(inverted.inverted_index.empty())
+        if(inverted.invertedIndex.empty())
             return;
         
-        inverted.inverted_index.findFirst();
-        while(!inverted.inverted_index.last()){
-            inverted_index.insert(inverted.inverted_index.retrieve().text, inverted.inverted_index.retrieve());
+        inverted.invertedIndex.findFirst();
+        while(!inverted.invertedIndex.last()){
+            invertedIndexBST.insert(inverted.invertedIndex.retrieve().text, inverted.invertedIndex.retrieve());
             
-            inverted.inverted_index.findNext();
+            inverted.invertedIndex.findNext();
         }
         
-        inverted_index.insert(inverted.inverted_index.retrieve().text, inverted.inverted_index.retrieve());
+        invertedIndexBST.insert(inverted.invertedIndex.retrieve().text, inverted.invertedIndex.retrieve());
     }
 
     public boolean searchWord(String word) {
-        return inverted_index.search(word);
+        return invertedIndexBST.search(word);
     }
     
     public void displayInvertedIndexBST(){
-        if (inverted_index==null) {
+        if (invertedIndexBST ==null) {
             System.out.println("Null inverted index");
             return;
         }
-        else if (inverted_index.empty()){
+        else if (invertedIndexBST.empty()){
             System.out.println("Empty inverted index");
             return;
         }
-       inverted_index.inOrder();
+       invertedIndexBST.inOrder();
     }
     
     

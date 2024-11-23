@@ -1,8 +1,8 @@
 public class QueryBST {
-   static InvertedIndexBST inverted;
+   static InvertedIndexBST invertedIndexBST;
        
-    public QueryBST(InvertedIndexBST inverted){
-        this.inverted = inverted;
+    public QueryBST(InvertedIndexBST invertedIndexBST){
+        this.invertedIndexBST = invertedIndexBST;
     }
     public static LinkedList<Integer> AndQuery(String Q){//     Q=Query
         LinkedList<Integer> listA = new LinkedList<Integer> ();//first list
@@ -11,13 +11,13 @@ public class QueryBST {
 
         if(terms.length == 0 ) 
             return listA;
-        boolean found = inverted.searchWord(terms[0].trim().toLowerCase()); // search
+        boolean found = invertedIndexBST.searchWord(terms[0].trim().toLowerCase()); // search
         if (found)
-            listA = inverted.inverted_index.retrieve().doc_IDS;
+            listA = invertedIndexBST.invertedIndexBST.retrieve().docIDS;
        for (int i = 1; i < terms.length; i++) {
-        found = inverted.searchWord(terms[i].trim().toLowerCase()); // search the current term
+        found = invertedIndexBST.searchWord(terms[i].trim().toLowerCase()); // search the current term
         if (found)
-            listB = inverted.inverted_index.retrieve().doc_IDS;
+            listB = invertedIndexBST.invertedIndexBST.retrieve().docIDS;
 
         listA = AndQuery(listA, listB);
     }
@@ -62,13 +62,13 @@ public class QueryBST {
 
         if(terms.length == 0 ) 
             return listA;
-        boolean found = inverted.searchWord(terms[0].trim().toLowerCase()); // search
+        boolean found = invertedIndexBST.searchWord(terms[0].trim().toLowerCase()); // search
         if (found)
-            listA = inverted.inverted_index.retrieve().doc_IDS;
+            listA = invertedIndexBST.invertedIndexBST.retrieve().docIDS;
         for (int i=1 ; i<terms.length ; i++){
-            found = inverted.searchWord(terms[i].trim().toLowerCase()); // search
+            found = invertedIndexBST.searchWord(terms[i].trim().toLowerCase()); // search
         if (found)
-            listB = inverted.inverted_index.retrieve().doc_IDS;
+            listB = invertedIndexBST.invertedIndexBST.retrieve().docIDS;
 
         listA = ORQuery(listA , listB);
         }

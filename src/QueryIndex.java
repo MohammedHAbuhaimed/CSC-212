@@ -41,7 +41,7 @@ public class QueryIndex {
            return result;
        listA.findFirst();
        while(true){
-            boolean found = existsIn_result(result , listA.retrieve()); 
+            boolean found = existsInResult(result , listA.retrieve());
             if(!found){
                 listB.findFirst();
                 while(true){
@@ -87,7 +87,7 @@ public class QueryIndex {
            return result;
        listA.findFirst();
        while(!listA.empty()){
-            boolean found = existsIn_result(result , listA.retrieve()); 
+            boolean found = existsInResult(result , listA.retrieve());
             if(!found){
                 result.insert(listA.retrieve());
             }
@@ -99,7 +99,7 @@ public class QueryIndex {
        }
        listB.findFirst();
        while(!listB.empty()){
-            boolean found = existsIn_result(result , listB.retrieve()); 
+            boolean found = existsInResult(result , listB.retrieve());
             if(!found){
                 result.insert(listB.retrieve());
             }
@@ -114,7 +114,7 @@ public class QueryIndex {
    
    
    
-public static boolean  existsIn_result(LinkedList<Integer> result , Integer id   ){
+public static boolean existsInResult(LinkedList<Integer> result , Integer id   ){
        if (result.empty()) 
            return false;
        result.findFirst();
