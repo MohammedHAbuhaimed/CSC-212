@@ -1,7 +1,7 @@
 import java.io.File;
 import java.util.Scanner;
 
-public class Reading { // This class will read the Excel file that contain the documents
+public class Reading { // This class will read the Excel file that contain the all_doc
     public static void Load(String fileName){
         String line=null;
         try{ // try block

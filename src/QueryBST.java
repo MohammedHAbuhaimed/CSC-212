@@ -1,7 +1,7 @@
 public class QueryBST {
-    public static InvertedIndexBST invertedIndexBST;
-    public QueryBST(InvertedIndexBST invertedIndexBST) {
-        this.invertedIndexBST = invertedIndexBST;
+    public static InvertedIndexBST inverted;
+    public QueryBST(InvertedIndexBST inverted) {
+        this.inverted = inverted;
     }
     public static LinkedList<Integer> booleanQuery(String query) {
         if(!query.contains("AND") && !query.contains("OR")) {
@@ -20,6 +20,7 @@ public class QueryBST {
         LinkedList<Integer> B = new LinkedList<Integer>();
         if(query.length()==0)
             return A;
+        //
         String ORs [] = query.split("OR");
         A=andQuery(ORs[0]);
         for(int i=1;i<ORs.length;i++){
@@ -28,23 +29,24 @@ public class QueryBST {
         }
         return A;
     }
+
     public static LinkedList<Integer> andQuery(String Query){
         LinkedList<Integer> A = new LinkedList<Integer>();
         LinkedList<Integer> B = new LinkedList<Integer>();
-        String words[] = Query.split("AND");
-        if(words.length == 0){
+        String terms[] = Query.split("AND");
+        if(terms.length == 0){
             return A;
         }
-        boolean found = invertedIndexBST.searchWordInInvertedIndex(words[0].trim().toLowerCase());
+        boolean found = inverted.search_word_in_inverted(terms[0].trim().toLowerCase());
         if(found){
-            A=invertedIndexBST.invertedindexBST.retrieve().documentIDs;
+            A=inverted.inverted_index.retrieve().doc_IDS;
         }
-        for(int i=1;i<words.length;i++){
-            found = invertedIndexBST.searchWordInInvertedIndex(words[i].trim().toLowerCase());
+        for(int i = 1; i< terms.length; i++){
+            found = inverted.search_word_in_inverted(terms[i].trim().toLowerCase());
             if(found){
-                B= invertedIndexBST.invertedindexBST.retrieve().documentIDs;
+                B=inverted.inverted_index.retrieve().doc_IDS;
             }
-            A=andQuery(A,B);
+            A=andQuery(A,B);//
         }
         return A;
 
@@ -56,7 +58,7 @@ public class QueryBST {
         }
         A.findFirst();
         while(true){
-            boolean found = existInResult(result, A.retrieve());
+            boolean found = existIn_result(result, A.retrieve());
             if(!found){
                 B.findFirst();
                 while(true){
@@ -80,24 +82,23 @@ public class QueryBST {
     public static LinkedList<Integer> orQuery(String Query){
         LinkedList<Integer> A = new LinkedList<Integer>();
         LinkedList<Integer> B = new LinkedList<Integer>();
-        String words[] = Query.split("OR");
-        if(words.length == 0){
+        String terms[] = Query.split("OR");
+        if(terms.length == 0){
             return A;
         }
-        boolean found = invertedIndexBST.searchWordInInvertedIndex(words[0].trim().toLowerCase());
+        boolean found = inverted.search_word_in_inverted(terms[0].trim().toLowerCase());
         if(found){
-            A=invertedIndexBST.invertedindexBST.retrieve().documentIDs;
+            A=inverted.inverted_index.retrieve().doc_IDS;
         }
-        for(int i=1;i<words.length;i++){
-            found = invertedIndexBST.searchWordInInvertedIndex(words[i].trim().toLowerCase());
+        for(int i = 1; i< terms.length; i++){
+            found = inverted.search_word_in_inverted(terms[i].trim().toLowerCase());
             if(found){
-                B=invertedIndexBST.invertedindexBST.retrieve().documentIDs;
+                B=inverted.inverted_index.retrieve().doc_IDS;
             }
             A=orQuery(A,B);
         }
         return A;
-        //
-    }//
+    }
     public static LinkedList<Integer> orQuery(LinkedList<Integer> A, LinkedList<Integer> B){
         LinkedList<Integer> result = new LinkedList<Integer>();
         if(A.empty() && B.empty()){
@@ -105,7 +106,7 @@ public class QueryBST {
         }
         A.findFirst();
         while(!A.empty()){
-            boolean found = existInResult(result, A.retrieve());
+            boolean found = existIn_result(result, A.retrieve());
             if(!found){
                 result.insert(A.retrieve());
             }
@@ -117,7 +118,7 @@ public class QueryBST {
         }
         B.findFirst();
         while(!B.empty()){
-            boolean found = existInResult (result, B.retrieve());
+            boolean found = existIn_result (result, B.retrieve());
             if(!found){
                 result.insert(B.retrieve());
             }
@@ -128,7 +129,7 @@ public class QueryBST {
         }
         return result;
     }
-    public static boolean existInResult(LinkedList<Integer> result, Integer ID){
+    public static boolean existIn_result(LinkedList<Integer> result, Integer ID){
         if(result.empty())
             return false;
         result.findFirst();

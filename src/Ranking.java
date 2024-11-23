@@ -1,45 +1,41 @@
-import com.sun.jdi.connect.spi.TransportService;
-
-import javax.print.Doc;
-
 public class Ranking {
     public static String Query;
     public static InvertedIndexBST inverted;
-    public static Index index;
-    public static LinkedList<Integer> DocumentsInQuery;
-    public static LinkedList<DocumentRank> DocumentRanked;
+    public static index index1;
+    public static LinkedList<Integer> all_doc_in_query;
+    public static LinkedList<DocumentRank> all_doc_ranked;
 
-public Ranking(InvertedIndexBST bst,Index i,String Q){
+public Ranking(InvertedIndexBST bst,index i,String Q){
     inverted = bst;
-    index = i;
+    index1 = i;
     Query = Q;
-    DocumentsInQuery = new LinkedList<Integer>();
-    DocumentRanked = new LinkedList<DocumentRank>();
+    all_doc_in_query = new LinkedList<Integer>();
+    all_doc_ranked = new LinkedList<DocumentRank>();
 }
 
-public static void display(){
-    if(DocumentRanked.empty()){
+public static void display_all_doc_with_score_usingList(){
+    if(all_doc_ranked.empty()){
         System.out.println("Empty");
         return;
     }
     System.out.printf("%-8s%-8s\n","DocumentID","Score");
-    DocumentRanked.findFirst();
-    while(!DocumentRanked.last()){
-    DocumentRanked.retrieve().display();
-    DocumentRanked.findNext();
+    all_doc_ranked.findFirst();
+    while(!all_doc_ranked.last()){
+    all_doc_ranked.retrieve().display();
+    all_doc_ranked.findNext();
     }
-    DocumentRanked.retrieve().display();
+    all_doc_ranked.retrieve().display();
 }//
 
 
 
-public static Document getDocumentGivenID(int id){
-    return  index.getDocumentID(id);
+public static Document get_doc_given_id(int id){
+    return  index1.get_document_givin_id(id);
 }
 
 
 
-public static int termCounterInDocument(Document d , String term){
+public static int term_frequency_in_doc(Document d , String term){
    int counter = 0;
    LinkedList<String> words = d.words;
    if(words.empty())
@@ -57,13 +53,13 @@ public static int termCounterInDocument(Document d , String term){
    return counter;
 }
 
-public static int getDocumentScore(Document d, String Query){
+public static int get_doc_rank_score(Document d, String Query){
     if(Query.length()==0)
         return 0;
     String terms[]= Query.split(" ");
     int sumFrequency = 0;
     for (int i = 0; i < terms.length; i++) {
-            sumFrequency+=termCounterInDocument(d,terms[i].trim().toLowerCase());
+            sumFrequency+= term_frequency_in_doc(d,terms[i].trim().toLowerCase());
     }
 return sumFrequency;
 }
@@ -74,22 +70,22 @@ public static void RankQuery(String query){
     String terms[]= Query.split("\\s+");
     boolean found = false;
     for (int i = 0; i < terms.length; i++) {
-            found=inverted.searchWordInInvertedIndex(terms[i].trim().toLowerCase());
+            found=inverted.search_word_in_inverted(terms[i].trim().toLowerCase());
             if(found)
-                L=inverted.invertedindexBST.retrieve().documentIDs;
-            addingInOneListSorted(L);
+                L=inverted.inverted_index.retrieve().doc_IDS;
+            Adding_in_1_list_sorted(L);
     }
 }
 
-public static void addingInOneListSorted(LinkedList<Integer>L){
+public static void Adding_in_1_list_sorted(LinkedList<Integer>L){
 if(L.empty())
     return;
 
 L.findFirst();
     while (!L.last()) {
-        boolean found = existsInResult(DocumentsInQuery,L.retrieve());
+        boolean found = existsIn_Result(all_doc_in_query,L.retrieve());
         if(!found){
-            insertSortedIDs(L.retrieve());
+            insert_sorted_Id_list(L.retrieve());
         }
         if(!L.last())
             L.findNext();
@@ -98,7 +94,7 @@ L.findFirst();
     }
 }
 
-public static boolean existsInResult(LinkedList<Integer>result ,int id){
+public static boolean existsIn_Result(LinkedList<Integer>result ,Integer id){
     if(result.empty())
         return false;
 
@@ -115,72 +111,73 @@ public static boolean existsInResult(LinkedList<Integer>result ,int id){
     return false;
     }
 
-    public static void insertSortedIDs(Integer id){
-    if(DocumentsInQuery.empty()){
-        DocumentsInQuery.insert(id);
+    public static void insert_sorted_Id_list(Integer id){
+    if(all_doc_in_query.empty()){
+        all_doc_in_query.insert(id);
         return;
     }
 
-    DocumentsInQuery.findFirst();
-    while (!DocumentsInQuery.last()) {
-        if (id < DocumentsInQuery.retrieve()) {
-            Integer ID = DocumentsInQuery.retrieve();
-            DocumentsInQuery.update(id);
-            DocumentsInQuery.insert(id);
+        all_doc_in_query.findFirst();
+    while (!all_doc_in_query.last()) {
+        if (id < all_doc_in_query.retrieve()) {
+            Integer id1 = all_doc_in_query.retrieve();
+            all_doc_in_query.update(id);
+            all_doc_in_query.insert(id1);
             return;
         } else
-            DocumentsInQuery.findNext();
+            all_doc_in_query.findNext();
     }
-    if(id<DocumentsInQuery.retrieve()) {
-        Integer ID = DocumentsInQuery.retrieve();
-        DocumentsInQuery.update(id);
-        DocumentsInQuery.insert(id);
+    if(id<all_doc_in_query.retrieve()) {
+        Integer id1 = all_doc_in_query.retrieve();
+        all_doc_in_query.update(id);
+        all_doc_in_query.insert(id1);
         return;
     }
-    else
-        DocumentsInQuery.insert(id);
+    else {
+        all_doc_in_query.insert(id);
     }
-    public static void insertSortedInList(){
+    }
+    public static void insert_sorted_in_list(){
     RankQuery(Query);
-    if(DocumentsInQuery.empty()){
+    if(all_doc_in_query.empty()){
         System.out.println("Empty query");
         return;
     }
-    DocumentsInQuery.findFirst();
-    while (!DocumentsInQuery.last()) {
-        Document d = getDocumentGivenID(DocumentsInQuery.retrieve());
-        int rank = getDocumentScore(d, Query);
-        insertSortedInList (new DocumentRank(DocumentsInQuery.retrieve(), rank));
-        DocumentsInQuery.findNext();
+        all_doc_in_query.findFirst();
+    while (!all_doc_in_query.last()) {
+        Document d = get_doc_given_id(all_doc_in_query.retrieve());
+        int rank = get_doc_rank_score(d, Query);
+        insert_sorted_list (new DocumentRank(all_doc_in_query.retrieve(), rank));
+        all_doc_in_query.findNext();
     }
-        Document d = getDocumentGivenID(DocumentsInQuery.retrieve());
-        int rank = getDocumentScore(d, Query);
-        insertSortedInList (new DocumentRank(DocumentsInQuery.retrieve(), rank));
+        Document d = get_doc_given_id(all_doc_in_query.retrieve());
+        int rank = get_doc_rank_score(d, Query);
+        insert_sorted_list (new DocumentRank(all_doc_in_query.retrieve(), rank));
     }
-    public static void insertSortedInList(DocumentRank rank){
-    if(DocumentRanked.empty()){
-        DocumentRanked.insert(rank);
+    public static void  insert_sorted_list(DocumentRank dr){
+    if(all_doc_ranked.empty()){
+        all_doc_ranked.insert(dr);
         return;
     }
-    DocumentRanked.findFirst();
-    while (!DocumentRanked.last()) {
-        if(rank.rank > DocumentRanked.retrieve().rank){
-            DocumentRank rank2 = DocumentRanked.retrieve();
-            DocumentRanked.update(rank);
-            DocumentRanked.insert(rank2);
+    all_doc_ranked.findFirst();
+    while (!all_doc_ranked.last()) {
+        if(dr.rank > all_doc_ranked.retrieve().rank){
+            DocumentRank dr1 = all_doc_ranked.retrieve();
+            all_doc_ranked.update(dr);
+            all_doc_ranked.insert(dr1);
             return;
         }
         else
-            DocumentRanked.findNext();
+            all_doc_ranked.findNext();
         }
-        if(rank.rank > DocumentRanked.retrieve().rank) {
-            DocumentRank rank2 = DocumentRanked.retrieve();
-            DocumentRanked.update(rank);
-            DocumentRanked.insert(rank2);
+        if(dr.rank > all_doc_ranked.retrieve().rank) {
+            DocumentRank dr1 = all_doc_ranked.retrieve();
+            all_doc_ranked.update(dr);
+            all_doc_ranked.insert(dr1);
             return;
         }
         else
-            DocumentRanked.insert(rank);
+            all_doc_ranked.insert(dr);
 
     }
 }

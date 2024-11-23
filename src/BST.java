@@ -38,7 +38,7 @@ public class BST <T> {
     }
     public boolean insert(String k, T val) {
         if (root == null) {
-            current = root = new BSTNode<>(k, val);
+            current = root = new BSTNode<T>(k, val);
             return true;
         }
         BSTNode<T> p = current;
@@ -60,12 +60,13 @@ public class BST <T> {
         } else
             inOrder(root);
     }
-    private void inOrder(BSTNode<T> p) {
+    private void inOrder(BSTNode p) {
         if(p==null)
             return;
         inOrder(p.left);
-        System.out.println("Key: "+ p.key);
-        System.out.println("Data: "+p.data);
+        //System.out.println("Key: "+ p.key);
+       // System.out.println("Data: "+p.data);
+        ((Word)p.data).display();
         inOrder(p.right);
     }
     public void preOrder() {
@@ -74,14 +75,15 @@ public class BST <T> {
         else
             preOrder(root);
     }
-    private void preOrder(BSTNode<T> p) {
+    private void preOrder(BSTNode p) {
         if(p==null)
             return;
         System.out.println("Key: "+ p.key);
-        System.out.println("Data" +p.data);
+        System.out.println(p.data.toString());
         preOrder(p.left);
         preOrder(p.right);
     }
 }
 
+//
 //

@@ -7,9 +7,7 @@ public class LinkedList <T> implements List<T>{
     public LinkedList() { // list is empty > head=null
         head=current=null;
     }
-    public LinkedList(Node<T> n) {
-        head=current=n;
-    }
+
 
 //
     @Override
@@ -27,16 +25,13 @@ public class LinkedList <T> implements List<T>{
     }
     @Override
     public void findNext() {
-        if(last())
-            return;
-        else
+
+
             current=current.next;
     }
     @Override
     public boolean last() {
-        if(current.next==null)
-            return true;
-        return false;
+      return current.next==null;
     }
     @Override
     public T retrieve() {
@@ -49,16 +44,17 @@ public class LinkedList <T> implements List<T>{
     @Override
     public void insert(T e) {
         n++;
-        Node<T> n = new Node<T>(e);
+        Node<T> tmp;
         if(empty())
-            head=current=n;
+            head=current=new Node<T>(e);
 
 
         else {
 
-            n.next=current.next;
-            current.next=n;
-            current=n;
+         tmp=current.next;
+         current.next=new Node<T> (e);
+         current=current.next;
+         current.next=tmp;
 
         }
 
@@ -69,23 +65,22 @@ public class LinkedList <T> implements List<T>{
 
         if(current==head) {
             head=head.next;
-            current=current.next;
+
         }
-        if(last())
+        else {
+
+
+            Node<T> p = head;
+
+            while (p.next != current) {
+                p = p.next;
+            }
+            p.next = current.next;
+        }
+        if(current.next==null)
             current=head;
-
-
-        Node<T> p = head;
-
-        while(p.next!=current) {
-            p=p.next;
-        }
-        p.next=current.next;
-
-        if(current.next!=null)
-            current=current.next;
         else
-            current=head;
+            current=current.next;
 
     }
 
@@ -100,18 +95,20 @@ public class LinkedList <T> implements List<T>{
         while(temp!=null){
             if(temp.data.equals(x))
                 return true;
-            else
-                temp = temp.next;
+
+            temp = temp.next;
         }
         return false;
     }
     public void display(){
+        if(this == null)
+            System.out.println("Null list");
         if(head == null)
             System.out.println("Empty list");
 
         Node<T> p = head;
         while(p!=null){
-            System.out.println(p.data+" ");
+            System.out.print(p.data+" ");
             p = p.next;
         }
     }

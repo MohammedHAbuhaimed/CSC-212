@@ -1,7 +1,7 @@
 public class QueryIndex {
-    public static Index Index;
-    public QueryIndex(Index Index) {
-        this.Index = Index;
+    public static index index;
+    public QueryIndex(index Index) {
+        this.index = Index;
     }
     public static LinkedList<Integer> booleanQuery(String query) {
         if(!query.contains("AND") && !query.contains("OR")) {
@@ -37,11 +37,11 @@ public class QueryIndex {
         if(words.length == 0){
             return A;
         }
-        A= Index.getAllDocumentTerms(words[0].trim().toLowerCase());
+        A= index.get_all_document_given_terms(words[0].trim().toLowerCase());
 
 
         for(int i=1;i<words.length;i++){
-           B=Index.getAllDocumentTerms(words[i].trim().toLowerCase());
+           B= index.get_all_document_given_terms(words[i].trim().toLowerCase());
             A=andQuery(A,B);
         }
         return A;
@@ -82,10 +82,10 @@ public class QueryIndex {
         if(words.length == 0){
             return A;
         }
-       A=Index.getAllDocumentTerms(words[0].trim().toLowerCase());
+       A=index.get_all_document_given_terms(words[0].trim().toLowerCase());
 
         for(int i=1;i<words.length;i++){
-            B=Index.getAllDocumentTerms(words[i].trim().toLowerCase());
+            B= index.get_all_document_given_terms(words[i].trim().toLowerCase());
             A=orQuery(A,B);
         }
         return A;
