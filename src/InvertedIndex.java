@@ -1,57 +1,57 @@
+//inverted by linkedList
 public class InvertedIndex {
-    LinkedList<Word> invertedIndex;
-
+    LinkedList<Word> inverted_index; 
+    
     public InvertedIndex(){
-        invertedIndex = new LinkedList<Word>();
+        inverted_index=new LinkedList<Word>();
     }
-    public void add(String text, int id){
-        if(!searchWordInInvertedIndex(text)){
-            Word w = new Word(text);
-            w.docIDS.insert(id);
-            invertedIndex.insert(w);
+    
+    public void addWord(String text, int id) {
+        //If the word isn't found 
+        if (!searchWord(text) ){
+            Word word = new Word(text);
+            word.doc_IDS.insert(id);
+            inverted_index.insert(word);
         }
-        else{
-            Word existing_word = invertedIndex.retrieve();
-            existing_word.addID(id);
+        else {
+            Word existingWord = inverted_index.retrieve();
+            existingWord.addID(id);
         }
-    }
+    }    
 
-    public boolean searchWordInInvertedIndex(String word){
-        if(invertedIndex ==null || invertedIndex.empty()) //checks if the list is empty
+    public boolean searchWord(String word) {
+        if (inverted_index==null || inverted_index.empty())
             return false;
-
-        invertedIndex.findFirst();
-        while(!invertedIndex.last()) {
-            if (invertedIndex.retrieve().text.equals(word)) {
+        inverted_index.findFirst();
+        while (!inverted_index.last()) {
+            if (inverted_index.retrieve().text.equals(word))
                 return true;
-            }
-            invertedIndex.findNext();
+            inverted_index.findNext();
         }
-        if(invertedIndex.retrieve().equals(word))
+        if(inverted_index.retrieve().equals(word)) //For the last word
             return true;
-
         return false;
     }
-
+    
     public void displayInvertedIndex(){
-        if(invertedIndex ==null) {
-            System.out.println("Null inverted index1 list");
+        if (inverted_index==null) {
+            System.out.println("Null inverted index");
             return;
         }
-        else if (invertedIndex.empty()) {
-            System.out.println("Empty inverted index1 list");
+        else if (inverted_index.empty()){
+            System.out.println("Empty inverted index");
             return;
         }
-
-            invertedIndex.findFirst();
-            while(!invertedIndex.last()){
-                invertedIndex.retrieve().display();
-
-                invertedIndex.findNext();
-            }
-            invertedIndex.retrieve().display();
-
+        inverted_index.findFirst();
+        while (!inverted_index.last()){
+            inverted_index.retrieve().display();
+            inverted_index.findNext();
+        }
+        //For the last word
+        inverted_index.retrieve().display();
+     
     }
-
-
-}//
+    
+    
+    
+}

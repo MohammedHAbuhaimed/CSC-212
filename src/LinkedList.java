@@ -1,118 +1,101 @@
-
-public class LinkedList <T> implements List<T>{
-
+public class LinkedList<T> {
     private Node<T> head;
     private Node<T> current;
-    int n=0;
-    public LinkedList() { // list is empty > head=null
-        head=current=null;
+    int count=0;
+    
+    public LinkedList(){
+        head= current= null;
     }
-
-
-    @Override
-    public boolean empty() {
-        return head==null;
+    
+    public boolean empty(){
+        return head== null;
     }
-    @Override
-    public boolean full() {
+    
+    public boolean last(){
+        return current.next == null;
+    }
+    
+    public boolean full(){
         return false;
     }
-    @Override
-    public void findFirst() {
-        current=head;
-
+    
+    public void findFirst(){
+        current= head;
     }
-    @Override
-    public void findNext() {
-
-
-            current=current.next;
+    
+    public void findNext(){
+        current= current.next;
     }
-    @Override
-    public boolean last() {
-      return current.next==null;
-    }
-    @Override
-    public T retrieve() {
+    
+    public T retrieve(){
         return current.data;
     }
-    @Override
-    public void update(T e) {
-        current.data=e;
+    
+    public void update(T val){
+        current.data= val;
     }
-    @Override
-    public void insert(T e) {
-        n++;
+    
+    public void insert(T val){
+        count++;
         Node<T> tmp;
-        if(empty())
-            head=current=new Node<T>(e);
-
-
-        else {
-
-         tmp=current.next;
-         current.next=new Node<T> (e);
-         current=current.next;
-         current.next=tmp;
-
+        if(empty()){
+            current= head= new Node<T> (val);
         }
-
+        else{
+            tmp= current.next;
+            current.next= new Node<T> (val);
+            current= current.next;
+            current.next= tmp;
+        }
     }
-
-    @Override
-    public void remove() {
-
-        if(current==head) {
-            head=head.next;
-
+    
+    public void remove(){
+        if(current == head){
+            head= head.next;
         }
-        else {
-
-
-            Node<T> p = head;
-
-            while (p.next != current) {
-                p = p.next;
-            }
-            p.next = current.next;
+        else{
+            Node<T> tmp= head;
+            while (tmp.next != current)
+                tmp= tmp.next;
+            tmp.next= current.next;
         }
-        if(current.next==null)
-            current=head;
+        if(current.next ==null)
+            current= head;
         else
-            current=current.next;
-
+            current= current.next;
+        
     }
-
-    public boolean isEmpty() {
-        return head==null;
-
+    
+    public int size(){
+        int n=0;
+        Node<T> p= head;
+        while (p != null){
+            n++;
+            p= p.next;
+        }
+        return n;
     }
-
-    // Helping methods:
-    public boolean search(T x){
-        Node<T> temp = head;
-        while(temp!=null){
-            if(temp.data.equals(x))
+    
+    public void display(){
+       if(this == null)
+           System.out.println("null list");
+        if(head == null)
+            System.out.println("Empty List");
+        
+        Node<T> p= head;
+        while (p!= null){
+            System.out.print(p.data + ", ");
+            p= p.next;
+        }
+    }
+    
+    public boolean search(T x) {
+        Node<T>p=head;
+        while(p!=null){
+            if (p.data.equals(x))
                 return true;
-
-            temp = temp.next;
+            p=p.next;
         }
         return false;
     }
-    public void display(){
-        if(this == null)
-            System.out.println("Null list");
-        if(head == null)
-            System.out.println("Empty list");
-
-        Node<T> p = head;
-        while(p!=null){
-            System.out.print(p.data+" ");
-            p = p.next;
-        }
-    }
-
-
-
-
 }

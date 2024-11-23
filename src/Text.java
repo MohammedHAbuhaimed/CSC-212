@@ -1,106 +1,97 @@
-
-import java.util.Scanner;
-import java.io.*;
 import java.io.File;
+import java.io.IOException;
+import java.util.Scanner;
 
 public class Text {
-    static LinkedList<String> stopWords;
-    static index index;
-    InvertedIndex invertedIndex;
-    InvertedIndexBST invertedIndexBST;
-    int numOfTokens;
-  //  int numOfUniqueTokens;
-    LinkedList<String> uniqueWords=new LinkedList<>();
-    public Text() {
-        stopWords = new LinkedList();
-        index = new index();
-        invertedIndex = new InvertedIndex();
-        invertedIndexBST = new InvertedIndexBST();
+LinkedList<String> stopWords;
+static index index1;
+InvertedIndex inverted;
+InvertedIndexBST invertedBST;
+int numberOfToken=0;
+LinkedList<String> uniqueWords=new LinkedList<>();
+
+    public Text(){
+        stopWords=new LinkedList<>();
+        index1=new index();
+        inverted=new InvertedIndex();
+        invertedBST= new InvertedIndexBST();
     }
-    public void loadStopWords(String fileName) {
 
-        try{ // try block
-            File f= new File(fileName); // Creating a file with the path as a parameter
-            Scanner s = new Scanner(f); // Reading the file f using scanner
-
-
-            while(s.hasNextLine()) { // while it is not the last line " has next line"
-                String line = s.nextLine();  // stores the data in the variable line
+    public void LoadStopWords(String fileName){
+        try{
+            File file=new File (fileName);
+            Scanner Read=new Scanner(file);
+            while (Read.hasNextLine()){
+                String line=Read.nextLine();
                 stopWords.insert(line);
-
             }
-        }
-        catch (IOException e){
+        }catch(IOException e){
             e.printStackTrace();
         }
     }
-    public void loadAllDoc(String fileName) {
-        String line=null;
-        try{ // try block
-            File f= new File(fileName); // Creating a file with the path as a parameter
-            Scanner s = new Scanner(f); // Reading the file f using scanner
-            s.nextLine(); // this skips the first row in Excel file (Header)
 
-            while(s.hasNextLine()) { // while it is not the last line " has next line"
-                line = s.nextLine();  // stores the data in the variable line
-                if(line.trim().length()<3) { // Skipping the empty 3 lines after document 49 in Excel file.
-                    //System.out.println("Empty line found, skipping this line "+ line);
+    public void LoadAllDoc(String fileName){
+        String line=null;
+        try{
+            File file=new File(fileName);
+            Scanner Read=new Scanner(file);
+
+            Read.nextLine(); //to skip first line
+            while (Read.hasNextLine()){
+                line=Read.nextLine();
+
+                if (line.trim().length()<3){
+                    System.out.println();
                     break;
                 }
-               // System.out.println(line);
 
-                String x = line.substring(0,line.indexOf(',')); // we take the id's of the docs
-                int id = Integer.parseInt(x.trim());
-               // System.out.println("line: "+line);//id = document# // trim --> cuts the spaces // parseInt --> converting String into int
-               String content = line.substring(line.indexOf(',')+1).trim(); // content = content of the document after the ","
-                //System.out.println("content: "+content);
-                LinkedList<String> words_in_doc = createListOfWords(content, id);
-                index.addDocument(new Document(id, words_in_doc, content));
-            }
-        }
-        catch (Exception e){
-            System.out.println("This is the end of the file");
-        }
-    }
-    public LinkedList<String> createListOfWords(String content, int id) {
-        LinkedList<String> words_in_doc = new LinkedList<String>();
-        processIndexAndInvertedIndex(content, words_in_doc, id);
-        return words_in_doc;
-    }
-    public void processIndexAndInvertedIndex(String content, LinkedList<String> words_in_doc, int id) {
-       //e-sports
-        while(content.contains("-")){
-            if(content.charAt(content.indexOf("-")-2)==' '){
-                content=content.replaceFirst("-", "");}
-            else
-            content=content.replaceFirst("-", " ");
+                String F =line.substring(0, line.indexOf(',')).trim();
+                int id = Integer.parseInt(F);
+              System.out.println("Docuemnt ID: "+ line);
+                String content = line.substring(line.indexOf(',')+1).trim();
 
-        }
-//        content=content.replaceAll("\'"," ");
-//        content=content.replaceAll("-"," ");
-       content=content.toLowerCase().replaceAll("[^a-zA-Z0-9 ]", "");
-        String[] tokens = content.split("\\s+");
-        numOfTokens +=tokens.length;
-        for(String w : tokens) {
-            if(!uniqueWords.search(w)) {
-                uniqueWords.insert(w);
-                //numOfUniqueTokens++;
+
+
+                LinkedList<String>WordsINDoc =makeLinkedListOfWords(content, id) ;
+                index1.addDocuemnt(new Document (id,WordsINDoc, content));
             }
-            if(!existInStopWords(w)){
-                words_in_doc.insert(w);
-                invertedIndex.add(w, id);
-                invertedIndexBST.add(w, id);
+        }catch(Exception e) {
+            System.out.println("End of file");
+        }
+    }
+
+    public LinkedList<String> makeLinkedListOfWords(String content, int id){
+            LinkedList<String>words_in_doc =new LinkedList<String>();
+            makeIndexAndInvertedIndex(content, words_in_doc, id);
+            return words_in_doc;
+    }
+
+    public LinkedList<String > InvertedIndexDoc (String WORDS, int id){
+        LinkedList<String>WordsINDoc=new LinkedList<String>();
+        InvertedIndex(WORDS, WordsINDoc, id);
+        return WordsINDoc;
+    }
+
+    public void InvertedIndex(String WORDS, LinkedList<String>WordsINDoc, int id){
+        WORDS = WORDS.toLowerCase().replaceAll("[^a-zA-Z0-9\\s]", "");
+        String[] tokens = WORDS.split("\\s+");
+        for (String w: tokens) {
+            if (!IsStopWord(w)){
+                WordsINDoc.insert(w);
+                inverted.addWord(w , id);
+                invertedBST.addWord(w, id);
             }
         }
     }
-    public boolean existInStopWords(String word) {
-        if(stopWords==null || stopWords.empty())
+
+    public boolean IsStopWord (String word) {
+        if (stopWords==null||stopWords.empty())
             return false;
         stopWords.findFirst();
-        while (!stopWords.last()){
+
+        while(!stopWords.last()){
             if(stopWords.retrieve().equals(word))
                 return true;
-
             stopWords.findNext();
         }
         if(stopWords.retrieve().equals(word))
@@ -108,34 +99,76 @@ public class Text {
 
         return false;
     }
-    public void loadAllFiles(String stopFile, String documentsFile){
-        loadStopWords(stopFile);
-        loadAllDoc(documentsFile);
+
+    public void LoadFiles(String stopWordsFile , String doucment){
+        LoadStopWords(stopWordsFile);
+        LoadAllDoc(doucment);
 
     }
-   // public void displayStopWords() {
-    //    stopWords.display_all_doc_with_score_usingList();
-   // }
 
-    public void displayDocWithGivenIDS(LinkedList<Integer>IDs) {
-        if(IDs.isEmpty()){
-            System.out.println("No documents found");
+    public void displayStopWords(){
+        stopWords.display ();
+    }
+
+    public void displayDocById(LinkedList<Integer> IDs) {
+        if (IDs.empty()){
+            System.err.print("IDs list is empty, document doesn't exist.");
             return;
         }
         IDs.findFirst();
+        System.out.print("Result: {");
         while (!IDs.last()){
-            Document doc = index.getDocumentGivinId(IDs.retrieve());
-            if(doc!=null){
-                System.out.println("Document "+ doc.id+": "+doc.content);
-            }
+            index1.getAllDocGivenID(IDs.retrieve());
+            System.out.print(",");
             IDs.findNext();
         }
-        Document doc = index.getDocumentGivinId(IDs.retrieve());
-        if(doc!=null){
-            System.out.println("Document "+ doc.id+": "+doc.content);
-        }
-        System.out.println("");
+        index1.getAllDocGivenID(IDs.retrieve());
+        System.out.println("}");
     }
+
+    public void makeIndexAndInvertedIndex(String content, LinkedList<String>words_in_doc, int id){
+        while (content.contains("-")) {
+            if (content.charAt(content.indexOf("-")-2)==' ')
+                content=content.replaceFirst("-", "");
+            else
+                content = content.replaceFirst("-", " ");
+        }
+        //to count unique words
+        content =content.replaceAll("\'", "");
+        content =content.replaceAll("-", "");
+        content= content.replaceAll("'", "");
+        content =content.toLowerCase().replaceAll("[^a-zA-Z0-9 ]", "");
+        String[] tokens = content.split("\\s+");
+        numberOfToken+= tokens.length;
+        for (String w: tokens){
+            if (!uniqueWords.search(w))
+                uniqueWords.insert(w);
+
+            if (!existsInStopWords(w)){
+                words_in_doc.insert(w);
+                inverted.addWord(w, id);
+                invertedBST.addWord(w, id);
+            }
+        }
+    }
+
+    public boolean existsInStopWords(String word) {
+        if (stopWords==null||stopWords.empty())
+            return false;
+
+        stopWords.findFirst();
+        while (!stopWords.last()){
+            if (stopWords.retrieve().equals(word))
+                return true;
+
+            stopWords.findNext();
+        }
+
+        if (stopWords.retrieve().equals(word))
+            return true;
+        return false;
+    }
+
     public static void displayMenu(){
         System.out.println("============================ Welcome to the Simple Search Engine System! ============================ ");
         System.out.println("1-Retrieve a term (choose a method)\n"
@@ -152,165 +185,128 @@ public class Text {
         System.out.println("9- Index Tokens: to show number of vocabulary and tokens in the index.");
         System.out.println("0- Exit.");
 
-    }//
-    public static void Test()
-    {
-        Text d=new Text();
-        d.loadAllFiles( "stop.txt","dataset.csv");
-        Scanner s=new Scanner(System.in);
-        int choice =0;
+    }
+    public static void main(String args[]){
+        Text text = new Text();
+        text.LoadFiles( "stop.txt","dataset.csv");
+        Scanner read =new Scanner(System.in);
+        int choice=0;
         do{
             displayMenu();
-            choice=s.nextInt();
-            switch(choice)
-            {
+            choice=read.nextInt();
+            switch(choice){
                 case 1:
                     System.out.println("Enter a term to retrieve");
-                    String term=s.next();
+                    String term=read.next();
                     term=term.toLowerCase().trim();
-                    System.out.println("Using index ");
-                    LinkedList<Integer>res=Text.index.getAllDocumentGivenTerms(term);
-                    System.out.print("word: "+term+" [");
+                    System.out.println("word:"+term);
+                    LinkedList<Integer>res= Text.index1.getAllDocGivenTerm(term);
+                    System.out.print("Document IDs: "+"[");
                     res.display();
                     System.out.println("]");
-                    System.out.println("----------------------------------------");
                     System.out.println("-inverted index with lists");
-                    boolean found=d.invertedIndex.searchWordInInvertedIndex(term);
+                    boolean found= text.inverted.searchWord(term);
                     if(found)
-                        d.invertedIndex.invertedIndex.retrieve().display();
+                        text.inverted.inverted_index.retrieve().display();
                     else
-                        System.out.println("Not found in inverted index ");
+                        System.out.println("Not found in inverted index with lists.");
 
-                    System.out.println("inverted index with BST.");
-                    boolean found2=d.invertedIndexBST.searchWordInInverted(term);
+                    System.out.println("-inverted index with BST.");
+                    boolean found2= text.invertedBST.searchWord(term);
                     if(found2)
-                        d.invertedIndex.invertedIndex.retrieve().display();
+                        text.inverted.inverted_index.retrieve().display();
                     else
-                        System.out.println("Not found in inverted index ");
+                        System.out.println("Not found in inverted index with lists.");
                     break;
                 case 2:
-                    s.nextLine();
-                    System.out.println("Enter a query to retrieve: ");
-                    String query=s.nextLine();
+                    read.nextLine();
+                    System.out.println("Enter a query to retrieve");
+                    String query=read.nextLine();
                     query=query.toLowerCase();
                     query=query.replaceAll(" and "," AND ");
                     query=query.replaceAll(" or "," OR ");
-                    System.out.println("\nWhich method you want to make a query: \n"
-                            + "1- index \n"
-                            + "2-inverted index  \n"
-                            + "3- BST\n");
-                    int x=s.nextInt();
+                    System.out.println("""
+                                       Please choose the query method:
+                                            1-Using index. 
+                                            2-Using inverted index list of lists. 
+                                            3-Using BST.
+                                            4-exit.
+                                       """);
+                    int opinion=read.nextInt();
                     do{
-                        if(x==1){
-                            QueryIndex q=new QueryIndex(Text.index);
-                            System.out.println("===================="+query+"====================");
-                            LinkedList res1= QueryIndex.mixedQuery(query);
-                            d.displayDocWithGivenIDS(res1);
-                        }
-                        else if(x==2){
-                            Query q=new Query(d.invertedIndex);
-                            System.out.println("===================="+query+"====================");
-                            LinkedList res1= Query.mixedQuery(query);
-                            d.displayDocWithGivenIDS(res1);
-                        }
-                        else if(x==3){
-                            QueryBST q=new QueryBST(d.invertedIndexBST);
-                            System.out.println("===================="+query+"====================");
-                            LinkedList res1= QueryBST.mixedQuery(query);
-                            d.displayDocWithGivenIDS(res1);
-                        }
-                        else if(x==4)
-                            break;
-                        else
-                            System.out.println("Wrong query");
+                    if(opinion==1){ // Query from index
+                      QueryIndex q=new QueryIndex(Text.index1);
+                       System.out.println("========"+query+"=======");
+                    LinkedList res1= QueryIndex.MixedQuery(query);
+                    text.displayDocById(res1);
+                    }
+                    else if(opinion==2){ // Normal Query
+                    Query q=new Query(text.inverted);
+                     System.out.println("========"+query+"=======");
+                    LinkedList res1= Query.MixedQuery(query);
+                    text.displayDocById(res1);
+                    }
+                    else if(opinion==3){ // QueryProcessingBST
+                      QueryBST q=new QueryBST(text.invertedBST);
+                      System.out.println("========"+query+"=======");
+                      LinkedList res1= QueryBST.MixedQuery(query);
+                      text.displayDocById(res1);
+                    }
+                    else if(opinion==4)
+                        break;
+                    else
+                        System.out.println("invalid query.");
 
-                        System.out.println("\nwhich method you want to make a query? \n"
-                                + "1- index \n"
-                                + "2- inverted index \n"
-                                + "3- BST\n"+
-                                "4- Exit");
-                        x=s.nextInt();
-                    }while(x!=4);
+                    System.out.println("""  
+                                       Please choose the query method:
+                                            1-Using index. 
+                                            2-Using inverted index list of lists. 
+                                            3-Using BST.
+                                            4-exit.
+                                       """);
+                    opinion=read.nextInt();
+                    }while(opinion!=4);
 
                     break;
                 case 3:
-                    s.nextLine();
-                    System.out.println("Enter a query to Rank: ");
-                    String query2=s.nextLine();
+                    read.nextLine();
+                    System.out.println("Enter a query to Rank");
+                    String query2=read.nextLine();
                     query2=query2.toLowerCase();
-                    Ranking R5=new Ranking(d.invertedIndexBST, index,query2);
-                    R5.insertSortedInList();
-                    R5.displayAllDocWithScoreUsingList();
+                    Ranking ranking=new Ranking(text.invertedBST, index1,query2);
+                    ranking.insertSortedList();
+                    ranking.displayAllDocList();
                     break;
                 case 4:
-                    d.index.displayDocuments();
-                    System.out.println("----------------------------------------------------");
+                    text.index1.displayDocuments();
+                    System.out.println("=================================");
                     break;
                 case 5:
-                    System.out.println("Number of documents: "+Text.index.all_doc.n);
-                    System.out.println("----------------------------------------------------");
+                    System.out.println("Number of documents="+ Text.index1.allDocuemnts.count);
+                    System.out.println("=================================");
                     break;
                 case 6:
-                    System.out.println("Number of unique words without stop words: "+d.invertedIndex.invertedIndex.n);
-                    System.out.println("----------------------------------------------------");
+                    System.out.println("Number of unique words without stop words="+ text.inverted.inverted_index.count);
+                    System.out.println("=================================");
                     break;
                 case 7:
-                    d.invertedIndex.displayInvertedIndex();
+                    text.inverted.displayInvertedIndex();
                     break;
                 case 8:
-                    d.invertedIndexBST.display_inverted_index();
+                    text.invertedBST.displayInvertedIndexBST();
                     break;
                 case 9:
-                    System.out.println("Number of tokens: "+d.numOfTokens);
-                    System.out.println("Number of unique words including stop words: "+d.uniqueWords.n);
+                 System.out.println("Number of tokens="+ text.numberOfToken);
+                 System.out.println("Number of unique words including stop words="+ text.uniqueWords.count);
                     break;
-                case 0:
-                    System.out.println("Thanks! See you later.");
+                case 10:
+                    System.out.println("==========Thank you for using our search engine!==========");
                     break;
                 default:
-                    System.out.println("Incorrect input, Please try again.");
+                    System.out.println("Error input number, please try again.");
                     break;
-            }
-        }while(choice !=0);
-
+                }
+            }while(choice!=10);
     }
-    public static void main(String[]args)
-    {
-        try {
-            Test();
-        }catch(Exception e) {
-            System.out.println("Please enter correct input");
-            Test();
-    }
-    }
-   /* public static void main(String[] args){
-        Text t = new Text();
-        t.Load_all_files("stop.txt", "dataset.csv");
-        t.index1.displayDocuments();
-        System.out.println("\n==========================================");
-        t.inverted.display_inverted_index();
-        System.out.println("num of tokens: "+ t.numTokens);
-        System.out.println("num of unique: "+ t.uniqueWords.n);
-        Query q = new Query(t.inverted);
-        LinkedList res = Query.andQuery("colorANDpole");
-        t.displayDocumentIDs(res);
-        System.out.println("--------------------OR--------------------------");
-        LinkedList res2 = Query.andQuery("Arabia OR pole ORcolor");
-        t.displayDocumentIDs(res2);
-        System.out.println("=================Ranking market sports using List========================");
-        Ranking R1 = new Ranking(new InvertedIndexBST(), index1, "market sports");
-        R1.insertSortedInList();
-        R1.display_inverted_index();
-        System.out.println("\n==========================");
-        Query q2 = new Query(t.inverted);
-        System.out.println("=======================market AND sports=======================");
-        //LinkedList res3 = Query.booleanQuery("market AND sports");
-      //  t.displayDocumentIDs(res3);
-        stopWords.display_inverted_index();
-
-
-
-    }*/
-
 
 }

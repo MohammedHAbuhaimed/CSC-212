@@ -1,139 +1,131 @@
 public class QueryIndex {
-    public static index index;
-    public QueryIndex(index Index) {
-        this.index = Index;
-    }
-    public static LinkedList<Integer> booleanQuery(String query) {
-        if(!query.contains("AND") && !query.contains("OR")) {
-            return andQuery(query);
-        } else if (query.contains("AND") && !query.contains("OR")) {
-            return andQuery(query);
-        } else if (query.contains("OR") && !query.contains("AND")) {
-            return orQuery(query);
-
-        }
-        else
-            return mixedQuery(query);
-    }
-    public static LinkedList<Integer> mixedQuery(String query) {
-        LinkedList<Integer> A = new LinkedList<Integer>();
-        LinkedList<Integer> B = new LinkedList<Integer>();
-        if(query.length()==0)
-            return A;
-        //
-        String ORs [] = query.split("OR");
-        A=andQuery(ORs[0]);
-        for(int i=1;i<ORs.length;i++){
-            B=andQuery(ORs[i]);
-            A=orQuery(A,B);
-        }
-        return A;
+    static index index ; 
+    
+    public QueryIndex(index index1){
+    this.index = index1;
     }
 
-    public static LinkedList<Integer> andQuery(String Query){
-        LinkedList<Integer> A = new LinkedList<Integer>();
-        LinkedList<Integer> B = new LinkedList<Integer>();
-        String words[] = Query.split("AND");
-        if(words.length == 0){
-            return A;
+    
+    public static LinkedList<Integer>MixedQuery(String Query){
+        LinkedList<Integer> listA= new LinkedList<Integer>();
+        LinkedList<Integer> listB= new LinkedList<Integer>();
+        if(Query.length() == 0)
+            return listA;
+        String ORs[]= Query.split("OR"); //less priorty than AND
+        
+        listA= AndQuery(ORs[0]);
+        for(int i=1; i< ORs.length; i++){
+            listB= AndQuery(ORs[i]);
+            listA= ORQuery(listA, listB);
         }
-        A= index.getAllDocumentGivenTerms(words[0].trim().toLowerCase());
+        return listA;
+}
+    public static LinkedList<Integer> AndQuery(String Q){//     Q=Query
+        LinkedList<Integer> listA = new LinkedList<Integer> ();//first list A
+        LinkedList<Integer> listB = new LinkedList<Integer> ();//second list B
+        String terms[] = Q.split("AND");
 
-
-        for(int i=1;i<words.length;i++){
-           B= index.getAllDocumentGivenTerms(words[i].trim().toLowerCase());
-            A=andQuery(A,B);
+        if(terms.length == 0 ) 
+            return listA;
+        listA = index.getAllDocGivenTerm(terms[0].trim().toLowerCase()); // search
+        for (int i=1 ; i<terms.length ; i++){
+            listB = index.getAllDocGivenTerm(terms[i].trim().toLowerCase()); // search
+            listA = AndQuery(listA,listB);
         }
-        return A;
-
+        return listA;
     }
-    public static LinkedList<Integer> andQuery(LinkedList<Integer> A, LinkedList<Integer> B){
-        LinkedList<Integer> result = new LinkedList<Integer>();
-        if(A.empty() || B.empty()){
-            return result;
-        }
-        A.findFirst();
-        while(true){
-            boolean found = existInResult(result, A.retrieve());
+    
+   public static LinkedList<Integer> AndQuery(LinkedList<Integer> listA , LinkedList<Integer> listB){
+       LinkedList<Integer> result = new LinkedList<Integer>();
+       if (listA.empty()|| listB.empty())
+           return result;
+       listA.findFirst();
+       while(true){
+            boolean found = existsIn_result(result , listA.retrieve()); 
             if(!found){
-                B.findFirst();
+                listB.findFirst();
                 while(true){
-                    if(B.retrieve().equals(A.retrieve())){
-                        result.insert(A.retrieve());
+                    if(listB.retrieve().equals(listA.retrieve())){
+                        result.insert(listA.retrieve());
                         break;
                     }
-                    if(!B.last())
-                        B.findNext();
-                    else
+                    if(!listB.last())
+                        listB.findNext();
+                    else 
                         break;
-                } // end of inner loop
-            } // end of if not found
-            if(!A.last())
-                A.findNext();
+                } //end S loop
+            
+            }//not found loop
+            if(!listA.last())
+                listA.findNext();
             else
                 break;
-        }// end of outer loop
-        return result;
-    }
-    public static LinkedList<Integer> orQuery(String Query){
-        LinkedList<Integer> A = new LinkedList<Integer>();
-        LinkedList<Integer> B = new LinkedList<Integer>();
-        String words[] = Query.split("OR");
-        if(words.length == 0){
-            return A;
-        }
-       A=index.getAllDocumentGivenTerms(words[0].trim().toLowerCase());
+       }
+       return result;
+       }
+   
+   
+    public static LinkedList<Integer> ORQuery(String Q){//     Q=Query
+        LinkedList<Integer> listA = new LinkedList<Integer> ();//first list A
+        LinkedList<Integer> listB= new LinkedList<Integer> ();//second list B
+        String terms[] = Q.split("OR");
 
-        for(int i=1;i<words.length;i++){
-            B= index.getAllDocumentGivenTerms(words[i].trim().toLowerCase());
-            A=orQuery(A,B);
+        if(terms.length == 0 ) 
+            return listA;
+        listA = index.getAllDocGivenTerm(terms[0].trim().toLowerCase()); // search
+        for (int i=1  ; i<terms.length ; i++){
+            listB = index.getAllDocGivenTerm(terms[i].trim().toLowerCase()); // search
+
+        listA = ORQuery(listA , listB);
         }
-        return A;
+        return listA;
     }
-    public static LinkedList<Integer> orQuery(LinkedList<Integer> A, LinkedList<Integer> B){
-        LinkedList<Integer> result = new LinkedList<Integer>();
-        if(A.empty() && B.empty()){
-            return result;
-        }
-        A.findFirst();
-        while(!A.empty()){
-            boolean found = existInResult(result, A.retrieve());
+    
+   public static LinkedList<Integer> ORQuery(LinkedList<Integer> listA , LinkedList<Integer> listB){
+       LinkedList<Integer> result = new LinkedList<Integer>();
+       if (listA.empty() && listB.empty())
+           return result;
+       listA.findFirst();
+       while(!listA.empty()){
+            boolean found = existsIn_result(result , listA.retrieve()); 
             if(!found){
-                result.insert(A.retrieve());
+                result.insert(listA.retrieve());
             }
-            if(!A.last())
-                A.findNext();
+            if(!listA.last()){
+                listA.findNext();
+            }
             else
                 break;
-
-        }//
-        B.findFirst();
-        while(!B.empty()){
-            boolean found = existInResult (result, B.retrieve());
+       }
+       listB.findFirst();
+       while(!listB.empty()){
+            boolean found = existsIn_result(result , listB.retrieve()); 
             if(!found){
-                result.insert(B.retrieve());
+                result.insert(listB.retrieve());
             }
-            if(!B.last())
-                B.findNext();
+            if(!listB.last()){
+                listB.findNext();
+            }
             else
                 break;
-        }
-        return result;
+       }
+      return result;
     }
-    public static boolean existInResult(LinkedList<Integer> result, Integer ID){
-        if(result.empty())
-            return false;
-        result.findFirst();
-        while(!result.empty()){
-            if(result.retrieve().equals(ID))
-                return true;
+   
+   
+   
+public static boolean  existsIn_result(LinkedList<Integer> result , Integer id   ){
+       if (result.empty()) 
+           return false;
+       result.findFirst();
+       while(!result.last()){
+           if (result.retrieve().equals(id))
+               return true ;
+           result.findNext();
+       }
+       if (result.retrieve().equals(id))
+           return true;
 
-            result.findNext();
-        }
-        if(result.retrieve().equals(ID))
-            return true;
-
-        return false;
-    }
-
+   return false ;
+   }
 }

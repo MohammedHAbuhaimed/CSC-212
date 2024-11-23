@@ -1,44 +1,54 @@
-public class InvertedIndexBST {
-    BST<Word> invertedIndex;
+//inverted by binary search tree
+public class InvertedIndexBST { 
+    BST<Word> inverted_index;
+    
     public InvertedIndexBST(){
-        invertedIndex = new BST<Word>();
+        inverted_index=new BST<Word>();
     }
-    public void add(String text, int id){
-        if(!searchWordInInverted(text)){
-            Word w = new Word(text);
-            w.docIDS.insert(id);
-            invertedIndex.insert(text,w);
+    
+    public void addWord(String text, int id) {
+        //If the word isn't found 
+        if (!searchWord(text) ){
+            Word word = new Word(text);
+            word.doc_IDS.insert(id);
+            inverted_index.insert(text,word);
         }
-        else{
-            Word wordExists = invertedIndex.retrieve();
-            wordExists.addID(id);
+        else {
+            Word existingWord = inverted_index.retrieve();
+            existingWord.addID(id);
         }
     }
+    
     public void addFromInvertedList(InvertedIndex inverted){
-        if(inverted.invertedIndex.empty())
+        if(inverted.inverted_index.empty())
             return;
-        inverted.invertedIndex.findFirst();
-        while(!inverted.invertedIndex.last()){
-            invertedIndex.insert(inverted.invertedIndex.retrieve().text, inverted.invertedIndex.retrieve());
-            inverted.invertedIndex.findNext();
+        
+        inverted.inverted_index.findFirst();
+        while(!inverted.inverted_index.last()){
+            inverted_index.insert(inverted.inverted_index.retrieve().text, inverted.inverted_index.retrieve());
+            
+            inverted.inverted_index.findNext();
         }
-        invertedIndex.insert(inverted.invertedIndex.retrieve().text, inverted.invertedIndex.retrieve());
+        
+        inverted_index.insert(inverted.inverted_index.retrieve().text, inverted.inverted_index.retrieve());
     }
-//
-    public boolean searchWordInInverted(String word){
-        return invertedIndex.findkey(word);
+
+    public boolean searchWord(String word) {
+        return inverted_index.search(word);
     }
-    public void display_inverted_index() {
-        if (invertedIndex == null) {
-            System.out.println("Null inverted index1 list");
-            return;
-        } else if (invertedIndex.empty()) {
-            System.out.println("Empty inverted index1 list");
+    
+    public void displayInvertedIndexBST(){
+        if (inverted_index==null) {
+            System.out.println("Null inverted index");
             return;
         }
-
-        invertedIndex.inOrder();
-
-
+        else if (inverted_index.empty()){
+            System.out.println("Empty inverted index");
+            return;
+        }
+       inverted_index.inOrder();
     }
+    
+    
+
 }

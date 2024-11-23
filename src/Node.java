@@ -1,14 +1,10 @@
-public class Node <T> {
-        public T data;
-        public Node<T> next;
+public class Node<T>{
 
-        public Node (T d) {
-            next=null;
-            data=d;
-        }
-        public Node () {
-            next = null;
-            data = null;
-        }
-
+    public T data;
+    public Node<T> next;
+    public Node (T val){
+        data= val;
+        next=null;
+    }
+    
 }

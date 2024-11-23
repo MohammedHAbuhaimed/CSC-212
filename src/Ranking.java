@@ -1,183 +1,198 @@
+//
+class DocumentRanking {
+    int id;
+    int rank;
+    public DocumentRanking(int id , int rank) {
+        this.id = id;
+        this.rank=rank;
+    }
+    public void display () {
+        System.out.printf("%-8d%-8d\n",id,rank);        
+    }
+}
+//Using sorted list with ordering ids
 public class Ranking {
-    public static String Query;
-    public static InvertedIndexBST invertedIndexBST;
-    public static index index;
-    public static LinkedList<Integer> allDocInQuery;
-    public static LinkedList<DocumentRank> allDocRanked;
-
-public Ranking(InvertedIndexBST bst,index i,String Q){
-    invertedIndexBST = bst;
-    index = i;
-    Query = Q;
-    allDocInQuery = new LinkedList<Integer>();
-    allDocRanked = new LinkedList<DocumentRank>();
-}
-
-public static void displayAllDocWithScoreUsingList(){
-    if(allDocRanked.empty()){
-        System.out.println("Empty");
-        return;
+    static String Query; 
+    static InvertedIndexBST inverted;
+    static index index1;
+    static LinkedList<Integer> queryDocs;
+    static LinkedList<DocumentRanking> rankedDocs;
+    
+    public Ranking (InvertedIndexBST inverted, index index1, String Query ) {
+        this.inverted = inverted; 
+        this.index1=index1;
+        this.Query= Query;
+        queryDocs=new LinkedList<Integer>();
+        rankedDocs=new LinkedList<DocumentRanking>();
     }
-    System.out.printf("%-8s%-8s\n","DocID ","Score");
-    allDocRanked.findFirst();
-    while(!allDocRanked.last()){
-    allDocRanked.retrieve().display();
-    allDocRanked.findNext();
-    }
-    allDocRanked.retrieve().display();
-}//
+    
+    public void displayAllDocList() {
+        System.out.println("Displaying documents with scores...");
 
-
-
-public static Document getDocGivenId(int id){
-    return  index.getDocumentGivinId(id);
-}
-
-
-
-public static int termFrequencyInDoc(Document d , String term){
-   int counter = 0;
-   LinkedList<String> words = d.words;
-   if(words.empty())
-       return 0;
-
-   words.findFirst();
-   while (!words.last()){
-       if(words.retrieve().equalsIgnoreCase(term))
-           counter++;
-       words.findNext();
-   }
-   if(words.retrieve().equalsIgnoreCase(term))
-       counter++;
-
-   return counter;
-}
-
-public static int getDocRankScore(Document d, String Query){
-    if(Query.length()==0)
-        return 0;
-    String terms[]= Query.split(" ");
-    int sumFrequency = 0;
-    for (int i = 0; i < terms.length; i++) {
-            sumFrequency+= termFrequencyInDoc(d,terms[i].trim().toLowerCase());
-    }
-return sumFrequency;
-}
-
-public static void RankQuery(String query){
-    LinkedList<Integer> L = new LinkedList<Integer>();
-    if(Query.length()==0) return;
-    String terms[]= Query.split("\\s+");
-    boolean found = false;
-    for (int i = 0; i < terms.length; i++) {
-            found= invertedIndexBST.searchWordInInverted(terms[i].trim().toLowerCase());
-            if(found)
-                L= invertedIndexBST.invertedIndex.retrieve().docIDS;
-            addingInOneListSorted(L);
-    }
-}
-
-public static void addingInOneListSorted(LinkedList<Integer>L){
-if(L.empty())
-    return;
-
-L.findFirst();
-    while (!L.last()) {
-        boolean found = existsInResult(allDocInQuery,L.retrieve());
-        if(!found){
-            insertSortedIdList(L.retrieve());
+        if (rankedDocs.empty()) {
+            System.out.println("Empty list, no ranked documents found.");
+            return;
         }
-        if(!L.last())
-            L.findNext();
-        else
-            break;
+        
+        System.out.printf("%-8s%-8s\n","DocID","Score");
+        rankedDocs.findFirst();
+        while(!rankedDocs.last()){
+            rankedDocs.retrieve().display();
+            rankedDocs.findNext();
+        }
+        rankedDocs.retrieve().display();
+        System.out.println("Displaying last document with scores...");
     }
-}
+    
+    public static Document getDocGivenID(int id) {
+        return index1.getAllDocGivenID(id);
+    }
+    
+    //عدد مرات تكرار الكلمة بالملف
+    public static int termFrequency(Document document, String term) {
+        int frequency = 0;
+        LinkedList<String> words= document.words;
+        if (words.empty())
+            return 0;
+        words.findFirst();
+        while (!words.last()){
+            if (words.retrieve().equalsIgnoreCase(term))
+                frequency++;
+            words.findNext();
+        }
+        if (words.retrieve().equalsIgnoreCase(term)) //last wors
+                frequency++;
+        return frequency;      
+    }
+    
+    public static int getRankScore(Document document, String Query) {
+        if (Query.isEmpty())
+            return 0;
+        String terms[]=Query.split("\\s+");
+        int totalFreq=0;
+        for(int i =0; i<terms.length; i++) //loops to all words and count word frequency
+            totalFreq+= termFrequency(document,terms[i].trim().toLowerCase());
+        return totalFreq;
+    }
+    
+    public static void RankQuery(String Query) {
+        LinkedList<Integer> docIDs= new LinkedList<Integer>();
+        if (Query.isEmpty())
+            return;
 
-public static boolean existsInResult(LinkedList<Integer>result , Integer id){
-    if(result.empty())
-        return false;
+        String[] terms = Query.split("\\s+"); //if there is more than one space
+        boolean found=false;
 
-    result.findFirst();
-    while (!result.last()) {
-        if (result.retrieve().equals(id)) {
+        for (int i=0; i< terms.length; i++) {
+            found = inverted.searchWord(terms[i].trim().toLowerCase());
+            if (found)
+                docIDs = inverted.inverted_index.retrieve().doc_IDS;
+            AddingInListSorted(docIDs);
+
+        }
+    }
+
+    
+    public static void AddingInListSorted (LinkedList<Integer> A) { //Addtpquerydoc
+        if (A.empty()) 
+            return;
+
+        A.findFirst();
+        while (!A.last()) {
+            if (!existInResult(queryDocs, A.retrieve()))
+                insertInSortedList(A.retrieve());
+            
+            A.findNext();
+        }
+        if (!existInResult(queryDocs, A.retrieve()))
+            insertInSortedList(A.retrieve());
+    }
+    
+    public static boolean existInResult(LinkedList<Integer> result,Integer id){
+        if (result.empty())
+            return false;
+        result.findFirst();
+        while (!result.last()) {
+            if (result.retrieve().equals(id))
+                return true;
+            result.findNext();
+        }
+        if(result.retrieve().equals(id))
             return true;
-        }
-        result.findNext();
+        return false;
     }
-    if(result.retrieve().equals(id))
-        return true;
-
-    return false;
-    }
-
-    public static void insertSortedIdList(Integer id){
-    if(allDocInQuery.empty()){
-        allDocInQuery.insert(id);
-        return;
-    }
-
-        allDocInQuery.findFirst();
-    while (!allDocInQuery.last()) {
-        if (id < allDocInQuery.retrieve()) {
-            Integer id1 = allDocInQuery.retrieve();
-            allDocInQuery.update(id);
-            allDocInQuery.insert(id1);
+    
+    public static void  insertInSortedList(Integer id) {
+        if (queryDocs.empty()){
+            queryDocs.insert(id);
             return;
-        } else
-            allDocInQuery.findNext();
-    }
-    if(id< allDocInQuery.retrieve()) {
-        Integer id1 = allDocInQuery.retrieve();
-        allDocInQuery.update(id);
-        allDocInQuery.insert(id1);
-        return;
-    }
-    else {
-        allDocInQuery.insert(id);
-    }
-    }
-    public static void insertSortedInList(){
-    RankQuery(Query);
-    if(allDocInQuery.empty()){
-        System.out.println("Empty query");
-        return;
-    }
-        allDocInQuery.findFirst();
-    while (!allDocInQuery.last()) {
-        Document d = getDocGivenId(allDocInQuery.retrieve());
-        int rank = getDocRankScore(d, Query);
-        insertSortedList(new DocumentRank(allDocInQuery.retrieve(), rank));
-        allDocInQuery.findNext();
-    }
-        Document d = getDocGivenId(allDocInQuery.retrieve());
-        int rank = getDocRankScore(d, Query);
-        insertSortedList(new DocumentRank(allDocInQuery.retrieve(), rank));
-    }
-    public static void insertSortedList(DocumentRank dr){
-    if(allDocRanked.empty()){
-        allDocRanked.insert(dr);
-        return;
-    }
-    allDocRanked.findFirst();
-    while (!allDocRanked.last()) {
-        if(dr.rank > allDocRanked.retrieve().rank){
-            DocumentRank dr1 = allDocRanked.retrieve();
-            allDocRanked.update(dr);
-            allDocRanked.insert(dr1);
+        }
+        
+        queryDocs.findFirst();
+        while(!queryDocs.last()){
+            if (id<queryDocs.retrieve()){
+                Integer id1 = queryDocs.retrieve();
+                queryDocs.update(id);
+                queryDocs.insert(id1);
+                return;
+            }
+            else
+                queryDocs.findNext();
+        }
+        if (id<queryDocs.retrieve()){
+            Integer id1 = queryDocs.retrieve();
+            queryDocs.update(id);
+            queryDocs.insert(id1);
             return;
         }
         else
-            allDocRanked.findNext();
-        }
-        if(dr.rank > allDocRanked.retrieve().rank) {
-            DocumentRank dr1 = allDocRanked.retrieve();
-            allDocRanked.update(dr);
-            allDocRanked.insert(dr1);
+            queryDocs.insert(id);
+            
+    }
+    
+    public static void insertSortedList(){
+        RankQuery(Query);//Finding queryDocs
+
+        if (queryDocs.empty()){
+            System.out.println("No matches for this query.");
             return;
         }
-        else
-            allDocRanked.insert(dr);
+        queryDocs.findFirst();
+        while(!queryDocs.last()){
+            Document document = getDocGivenID(queryDocs.retrieve());
+            int Rank = getRankScore(document, Query);
+            insertSortedList(new DocumentRanking(queryDocs.retrieve(),Rank)); //Adding the document in order
+            queryDocs.findNext();
+        }
+            Document document = getDocGivenID(queryDocs.retrieve());
+            int Rank = getRankScore(document, Query);
+            insertSortedList(new DocumentRanking(queryDocs.retrieve(),Rank));
 
-    }
+    } 
+    
+        public static void insertSortedList(DocumentRanking documentRanked) {
+            if (rankedDocs.empty()){
+                rankedDocs.insert(documentRanked);
+                return;
+            }
+            rankedDocs.findFirst();
+            while(!rankedDocs.last()){
+                if (documentRanked.rank>rankedDocs.retrieve().rank) {
+                    DocumentRanking documentRanked1 = rankedDocs.retrieve();
+                    rankedDocs.update(documentRanked);
+                    rankedDocs.insert(documentRanked1);
+                    return;
+                }
+                else
+                    rankedDocs.findNext();
+            }
+            if (documentRanked.rank>rankedDocs.retrieve().rank) {
+                DocumentRanking documentRanked1 = rankedDocs.retrieve();
+                rankedDocs.update(documentRanked);
+                rankedDocs.insert(documentRanked1);
+                return;
+            }
+            else
+                rankedDocs.insert(documentRanked);
+        }
 }
