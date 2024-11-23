@@ -1,43 +1,43 @@
 public class InvertedIndexBST {
-    BST<Word> inverted_index;
+    BST<Word> invertedIndex;
     public InvertedIndexBST(){
-        inverted_index = new BST<Word>();
+        invertedIndex = new BST<Word>();
     }
     public void add(String text, int id){
-        if(!search_word_in_inverted(text)){
+        if(!searchWordInInverted(text)){
             Word w = new Word(text);
-            w.doc_IDS.insert(id);
-            inverted_index.insert(text,w);
+            w.docIDS.insert(id);
+            invertedIndex.insert(text,w);
         }
         else{
-            Word wordExists = inverted_index.retrieve();
-            wordExists.add_ID(id);
+            Word wordExists = invertedIndex.retrieve();
+            wordExists.addID(id);
         }
     }
-    public void add_from_inverted_list(InvertedIndex inverted){
-        if(inverted.inverted_index.empty())
+    public void addFromInvertedList(InvertedIndex inverted){
+        if(inverted.invertedIndex.empty())
             return;
-        inverted.inverted_index.findFirst();
-        while(!inverted.inverted_index.last()){
-            inverted_index.insert(inverted.inverted_index.retrieve().text, inverted.inverted_index.retrieve());
-            inverted.inverted_index.findNext();
+        inverted.invertedIndex.findFirst();
+        while(!inverted.invertedIndex.last()){
+            invertedIndex.insert(inverted.invertedIndex.retrieve().text, inverted.invertedIndex.retrieve());
+            inverted.invertedIndex.findNext();
         }
-        inverted_index.insert(inverted.inverted_index.retrieve().text, inverted.inverted_index.retrieve());
+        invertedIndex.insert(inverted.invertedIndex.retrieve().text, inverted.invertedIndex.retrieve());
     }
 //
-    public boolean search_word_in_inverted(String word){
-        return inverted_index.findkey(word);
+    public boolean searchWordInInverted(String word){
+        return invertedIndex.findkey(word);
     }
     public void display_inverted_index() {
-        if (inverted_index == null) {
+        if (invertedIndex == null) {
             System.out.println("Null inverted index1 list");
             return;
-        } else if (inverted_index.empty()) {
+        } else if (invertedIndex.empty()) {
             System.out.println("Empty inverted index1 list");
             return;
         }
 
-        inverted_index.inOrder();
+        invertedIndex.inOrder();
 
 
     }

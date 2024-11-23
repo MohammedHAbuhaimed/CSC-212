@@ -3,7 +3,7 @@ public class index {
     public index() {
         all_doc = new LinkedList<Document>();
     }
-    public void add_Document(Document d) { // This method will add the document into the list
+    public void addDocument(Document d) { // This method will add the document into the list
         all_doc.insert(d);
     }
     public void displayDocuments() { // This method will display_inverted_index all the all_doc in the list
@@ -17,7 +17,7 @@ public class index {
         all_doc.findFirst(); // moving the current to the head
         while(!all_doc.last()){ // display_inverted_index all the all_doc while we haven't reached the last document
             Document doc = all_doc.retrieve(); // store the current document into the variable doc
-            System.out.println("\n-----------------------------------------"); // Splitting
+            System.out.println("\n----------------------------------------------------"); // Splitting
             System.out.println("ID: "+ doc.id); // displaying the id for each document
             doc.words.display(); // display_inverted_index all the words in the document
             //System.out.println("\n-----------------------------------------"); // Splitting
@@ -26,10 +26,10 @@ public class index {
 //
         // Displaying the last document
         Document doc = all_doc.retrieve();
-        System.out.println("\n------------------------------");
+        System.out.println("\n----------------------------------------------------");
         System.out.println("ID: "+ doc.id);
         doc.words.display();
-
+        System.out.println("----------------------------------------------------");
     }
 //    public Document displayDocumentsWithGivenIDs(Integer ids) {
 //        if (all_doc.empty()) { // Check if the list is empty
@@ -69,7 +69,7 @@ public class index {
 //        }
 //        return all_doc.retrieve();
 //    }
-    public LinkedList<Integer> get_all_document_given_terms(String term) {
+    public LinkedList<Integer> getAllDocumentGivenTerms(String term) {
         LinkedList<Integer> terms = new LinkedList<>();
         if (all_doc.empty()) {
             System.out.println("No all_doc found");
@@ -89,7 +89,7 @@ public class index {
         }
         return terms;
     }
-    public Document get_document_givin_id(int id){
+    public Document getDocumentGivinId(int id){
         if(all_doc.empty()) {
             System.out.println("No documents found");
             return null;

@@ -9,7 +9,6 @@ public class LinkedList <T> implements List<T>{
     }
 
 
-//
     @Override
     public boolean empty() {
         return head==null;

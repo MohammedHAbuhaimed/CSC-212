@@ -37,11 +37,11 @@ public class QueryIndex {
         if(words.length == 0){
             return A;
         }
-        A= index.get_all_document_given_terms(words[0].trim().toLowerCase());
+        A= index.getAllDocumentGivenTerms(words[0].trim().toLowerCase());
 
 
         for(int i=1;i<words.length;i++){
-           B= index.get_all_document_given_terms(words[i].trim().toLowerCase());
+           B= index.getAllDocumentGivenTerms(words[i].trim().toLowerCase());
             A=andQuery(A,B);
         }
         return A;
@@ -82,10 +82,10 @@ public class QueryIndex {
         if(words.length == 0){
             return A;
         }
-       A=index.get_all_document_given_terms(words[0].trim().toLowerCase());
+       A=index.getAllDocumentGivenTerms(words[0].trim().toLowerCase());
 
         for(int i=1;i<words.length;i++){
-            B= index.get_all_document_given_terms(words[i].trim().toLowerCase());
+            B= index.getAllDocumentGivenTerms(words[i].trim().toLowerCase());
             A=orQuery(A,B);
         }
         return A;

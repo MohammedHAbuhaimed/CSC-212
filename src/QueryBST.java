@@ -1,7 +1,7 @@
 public class QueryBST {
-    public static InvertedIndexBST inverted;
-    public QueryBST(InvertedIndexBST inverted) {
-        this.inverted = inverted;
+    public static InvertedIndexBST invertedIndexBST;
+    public QueryBST(InvertedIndexBST invertedIndexBST) {
+        this.invertedIndexBST = invertedIndexBST;
     }
     public static LinkedList<Integer> booleanQuery(String query) {
         if(!query.contains("AND") && !query.contains("OR")) {
@@ -37,14 +37,14 @@ public class QueryBST {
         if(terms.length == 0){
             return A;
         }
-        boolean found = inverted.search_word_in_inverted(terms[0].trim().toLowerCase());
+        boolean found = invertedIndexBST.searchWordInInverted(terms[0].trim().toLowerCase());
         if(found){
-            A=inverted.inverted_index.retrieve().doc_IDS;
+            A= invertedIndexBST.invertedIndex.retrieve().docIDS;
         }
         for(int i = 1; i< terms.length; i++){
-            found = inverted.search_word_in_inverted(terms[i].trim().toLowerCase());
+            found = invertedIndexBST.searchWordInInverted(terms[i].trim().toLowerCase());
             if(found){
-                B=inverted.inverted_index.retrieve().doc_IDS;
+                B= invertedIndexBST.invertedIndex.retrieve().docIDS;
             }
             A=andQuery(A,B);//
         }
@@ -58,7 +58,7 @@ public class QueryBST {
         }
         A.findFirst();
         while(true){
-            boolean found = existIn_result(result, A.retrieve());
+            boolean found = existInResult(result, A.retrieve());
             if(!found){
                 B.findFirst();
                 while(true){
@@ -86,14 +86,14 @@ public class QueryBST {
         if(terms.length == 0){
             return A;
         }
-        boolean found = inverted.search_word_in_inverted(terms[0].trim().toLowerCase());
+        boolean found = invertedIndexBST.searchWordInInverted(terms[0].trim().toLowerCase());
         if(found){
-            A=inverted.inverted_index.retrieve().doc_IDS;
+            A= invertedIndexBST.invertedIndex.retrieve().docIDS;
         }
         for(int i = 1; i< terms.length; i++){
-            found = inverted.search_word_in_inverted(terms[i].trim().toLowerCase());
+            found = invertedIndexBST.searchWordInInverted(terms[i].trim().toLowerCase());
             if(found){
-                B=inverted.inverted_index.retrieve().doc_IDS;
+                B= invertedIndexBST.invertedIndex.retrieve().docIDS;
             }
             A=orQuery(A,B);
         }
@@ -106,7 +106,7 @@ public class QueryBST {
         }
         A.findFirst();
         while(!A.empty()){
-            boolean found = existIn_result(result, A.retrieve());
+            boolean found = existInResult(result, A.retrieve());
             if(!found){
                 result.insert(A.retrieve());
             }
@@ -118,7 +118,7 @@ public class QueryBST {
         }
         B.findFirst();
         while(!B.empty()){
-            boolean found = existIn_result (result, B.retrieve());
+            boolean found = existInResult(result, B.retrieve());
             if(!found){
                 result.insert(B.retrieve());
             }
@@ -129,7 +129,7 @@ public class QueryBST {
         }
         return result;
     }
-    public static boolean existIn_result(LinkedList<Integer> result, Integer ID){
+    public static boolean existInResult(LinkedList<Integer> result, Integer ID){
         if(result.empty())
             return false;
         result.findFirst();
